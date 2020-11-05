@@ -3,7 +3,7 @@ import os
 from discord.ext import commands
 
 
-bot = discord.ext.commands.Bot('!')
+bot = discord.ext.commands.Bot('ve!')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 
