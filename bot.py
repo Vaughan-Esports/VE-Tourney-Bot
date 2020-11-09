@@ -1,5 +1,6 @@
 import discord
 import os
+import settings
 from discord.ext import commands
 
 
@@ -44,7 +45,7 @@ async def veto(ctx, game, p2):
         embed.add_field(name="Counterpick Stages", value="Kalos Pokemon League\nLylat Cruise\nYoshi's Story",
                         inline=True)
         embed.set_footer(icon_url="https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png",
-                         text="November 2020 Smash Ult. Monthly")
+                         text=settings.tourney_name)
         await ctx.send(embed=embed)
 
 bot.run(BOT_TOKEN)
