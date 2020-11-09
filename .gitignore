@@ -254,6 +254,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm+all,windows,python
-
-# Settings file
-settings.py
