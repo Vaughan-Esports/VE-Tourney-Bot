@@ -115,14 +115,15 @@ async def veto(ctx, game, seriesLength, p2):
         await msg.delete()
         await players_msg.delete()
 
+        # stage check function
+        def stageCheck(message):
+            return message.content.title() in starter_stages and message.content.title not in removed_stages \
+                   and message.channel == ctx.channel
+
         # first game veto process
         # starter veto
         veto_msg = await ctx.send(f"{player1} please veto a starter.")
-
-        def stage1Check(message):
-            return message.content.title() in starter_stages and message.channel == ctx.channel
-
-        msg = await bot.wait_for('message', check=stage1Check)
+        msg = await bot.wait_for('message', check=stageCheck)
         # remove messages
         await veto_msg.delete()
         await msg.delete()
@@ -134,11 +135,7 @@ async def veto(ctx, game, seriesLength, p2):
 
         # second veto
         veto_msg = await ctx.send(f"{player2} please veto a starter.")
-
-        def stage2Check(message):
-            return message.content.title() in starter_stages and message.channel == ctx.channel
-
-        msg = await bot.wait_for('message', check=stage2Check)
+        msg = await bot.wait_for('message', check=stageCheck)
         # remove messages
         await veto_msg.delete()
         await msg.delete()
@@ -150,11 +147,7 @@ async def veto(ctx, game, seriesLength, p2):
 
         # 3rd veto
         veto_msg = await ctx.send(f"{player2} please veto another starter.")
-
-        def stage2Check(message):
-            return message.content.title() in starter_stages and message.channel == ctx.channel
-
-        msg = await bot.wait_for('message', check=stage2Check)
+        msg = await bot.wait_for('message', check=stageCheck)
         # remove messages
         await veto_msg.delete()
         await msg.delete()
@@ -163,6 +156,9 @@ async def veto(ctx, game, seriesLength, p2):
         # edit game 1 embed to remove the stage
         embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
         await main_msg.edit(embed=embed)
+
+        # player 1 pick
+        veto_msg = await ctx.send(f"{player1} please pick a map from the remaining starters")
 
 
 bot.run(BOT_TOKEN)
