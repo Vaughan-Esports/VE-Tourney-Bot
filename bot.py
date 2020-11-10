@@ -68,7 +68,7 @@ async def veto(ctx, game, seriesLength, p2):
     Starts a veto lobby with your opponent
     """
     if game == 'smash' and seriesLength == 'bo3':
-        embed = discord.Embed(description=f"{ctx.author.mention} vs {p2}"
+        embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto", description=f"{ctx.author.mention} vs {p2}"
                                           f"\nThe rulebook can be found [here](https://vaughanesports.org/rules)",
                               color=discord.Color(0xffff00))
 
@@ -90,7 +90,7 @@ async def veto(ctx, game, seriesLength, p2):
         embed.add_field(name="Starter Stages", value=starter_stages_message(), inline=True)
         embed.add_field(name="Counterpick Stages", value=counterpick_stages_message(), inline=True)
         embed.set_footer(icon_url="https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png",
-                         text=f"{tourney_name} | DM Brandon for help or ping here.")
+                         text=f"{tourney_name} | {footer_note}")
 
         main_msg = await ctx.send(embed=embed)
 
@@ -114,9 +114,7 @@ async def veto(ctx, game, seriesLength, p2):
         players_msg = await ctx.send(f"Starting veto with {player1} as **Player 1** and {player2} as **Player 2**.")
         # delete all messages and begin veto after 5 seconds
         await asyncio.sleep(5)
-        await player_msg.delete()
-        await msg.delete()
-        await players_msg.delete()
+        await ctx.channel.purge(after=main_msg)
 
         # stage check function
         def stageCheck(message):
@@ -139,9 +137,8 @@ async def veto(ctx, game, seriesLength, p2):
             # players message
             msg = await bot.wait_for('message', check=stageCheck)
 
-            # remove messages
-            await veto_msg.delete()
-            await msg.delete()
+            # remove messages sent after the embed
+            await ctx.channel.purge(after=main_msg)
 
             # edit game 1 embed to remove the stage
             if x == 3:
