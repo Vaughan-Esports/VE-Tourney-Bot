@@ -4,7 +4,8 @@ import settings
 from discord.ext import commands
 
 intents = discord.Intents.default()
-bot = discord.ext.commands.Bot('ve!', intents=intents, description="Tournament Bot for Vaughan Esports")
+bot = discord.ext.commands.Bot('ve!', intents=intents, description="Tournament Bot for Vaughan Esports",
+                               case_insensitive=True)
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 # get stage list from settings file
@@ -30,34 +31,34 @@ for x in range(len(settings.counterpick_stages)):
 
 
 @bot.command()
-async def veto(ctx, game, p2):
+async def veto(ctx, game, seriesLength, p2):
     """
     Starts a veto lobby with your opponent
     """
     if game == 'smash':
         embed = discord.Embed(description=f"{ctx.author.mention} vs {p2}"
-                                          f"\n\nThe rulebook can be found [here](https://vaughanesports.org/rules)",
+                                          f"\nThe rulebook can be found [here](https://vaughanesports.org/rules)",
                               color=discord.Color(0xffff00))
 
         # game 1 embed line
-        embed.add_field(name="`Game 1                                                       `",
+        embed.add_field(name="`                         Game 1                            `",
                         value="**Winner:** TBD", inline=False)
         embed.add_field(name="Starter Stages", value=starter_stages, inline=True)
         embed.add_field(name="Counterpick Stages", value=counterpick_stages, inline=True)
 
         # game 2 embed line
-        embed.add_field(name="`Game 2                                                       `",
+        embed.add_field(name="`                         Game 2                            `",
                         value="**Winner:** TBD", inline=False)
         embed.add_field(name="Starter Stages", value=starter_stages, inline=True)
         embed.add_field(name="Counterpick Stages", value=counterpick_stages, inline=True)
 
         # game 3 embed line
-        embed.add_field(name="`Game 3                                                       `",
+        embed.add_field(name="`                         Game 3                            `",
                         value="**Winner:** TBD", inline=False)
         embed.add_field(name="Starter Stages", value=starter_stages, inline=True)
         embed.add_field(name="Counterpick Stages", value=counterpick_stages, inline=True)
         embed.set_footer(icon_url="https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png",
-                         text=settings.tourney_name)
+                         text=f"{settings.tourney_name} | DM Brandon for help or ping here.")
 
         await ctx.send(embed=embed)
 
