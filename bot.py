@@ -68,7 +68,10 @@ async def veto(ctx, game, seriesLength, p2):
     Starts a veto lobby with your opponent
     """
     if game == 'smash' and seriesLength == 'bo3':
-        embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto", description=f"{ctx.author.mention} vs {p2}"
+        player1 = ctx.author
+        player2 = await bot.fetch_user(p2[3:-1])
+        embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto",
+                              description=f"{player1.mention} vs {player2.mention}"
                                           f"\nThe rulebook can be found [here](https://vaughanesports.org/rules)",
                               color=discord.Color(0xffff00))
 
@@ -98,8 +101,6 @@ async def veto(ctx, game, seriesLength, p2):
         removed_stages = []
 
         # determine higher seed
-        player1 = ctx.author.mention
-        player2 = p2
         player_msg = await ctx.send("Player 1 (the higher seed) say \"**me**\"")
 
         # checks which user says me
@@ -111,7 +112,7 @@ async def veto(ctx, game, seriesLength, p2):
         if msg.author.mention == player2:
             player1 = msg.author.mention
             player2 = ctx.author.mention
-        players_msg = await ctx.send(f"Starting veto with {player1} as **Player 1** and {player2} as **Player 2**.")
+        players_msg = await ctx.send(f"Starting veto with {player1.mention} as **Player 1** and {player2.mention} as **Player 2**.")
         # delete all messages and begin veto after 5 seconds
         await asyncio.sleep(5)
         await ctx.channel.purge(after=main_msg)
@@ -126,13 +127,13 @@ async def veto(ctx, game, seriesLength, p2):
             # create msg variable
             veto_msg = None
             if x == 0:
-                veto_msg = await ctx.send(f"{player1} please veto a starter.")
+                veto_msg = await ctx.send(f"{player1.mention} please veto a starter.")
             if x == 1:
-                veto_msg = await ctx.send(f"{player2} please veto a starter.")
+                veto_msg = await ctx.send(f"{player2.mention} please veto a starter.")
             if x == 2:
-                veto_msg = await ctx.send(f"{player2} please veto another starter.")
+                veto_msg = await ctx.send(f"{player2.mention} please veto another starter.")
             if x == 3:
-                veto_msg = await ctx.send(f"{player1} please pick a map from the remaining starters.")
+                veto_msg = await ctx.send(f"{player1.mention} please pick a map from the remaining starters.")
 
             # players message
             msg = await bot.wait_for('message', check=stageCheck)
