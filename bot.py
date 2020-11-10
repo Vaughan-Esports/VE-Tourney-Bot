@@ -4,8 +4,9 @@ import settings
 from discord.ext import commands
 
 intents = discord.Intents.default()
+allowed_mentions = discord.AllowedMentions(everyone=False, users=True, roles=True)
 bot = discord.ext.commands.Bot('ve!', intents=intents, description="Tournament Bot for Vaughan Esports",
-                               case_insensitive=True)
+                               case_insensitive=True, allowed_mentions=allowed_mentions)
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 # get stage list from settings file
