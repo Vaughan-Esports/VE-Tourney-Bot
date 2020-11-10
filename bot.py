@@ -1,6 +1,7 @@
+import asyncio
 import discord
 import os
-import settings
+from settings import *
 from discord.ext import commands
 
 intents = discord.Intents.default()
@@ -9,26 +10,53 @@ bot = discord.ext.commands.Bot('ve!', intents=intents, description="Tournament B
                                case_insensitive=True, allowed_mentions=allowed_mentions)
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
-# get stage list from settings file
-starter_stages = ""  # blank string
-# loop through starter stages
-for x in range(len(settings.starter_stages)):
-    # if first stage then make string the stage name
-    if len(starter_stages) == 0:
-        starter_stages = f"{settings.starter_stages[x]}\n"
-    # else concatenate the new stage name
-    else:
-        starter_stages = f"{starter_stages}{settings.starter_stages[x]}\n"
 
-counterpick_stages = ""  # blank string
-# loop through counterpick stages
-for x in range(len(settings.counterpick_stages)):
-    # if first stage then make string the stage name
-    if len(counterpick_stages) == 0:
-        counterpick_stages = f"{settings.counterpick_stages[x]}\n"
-    # else concatenate the new stage name
-    else:
-        counterpick_stages = f"{counterpick_stages}{settings.counterpick_stages[x]}\n"
+def starter_stages_message(removed_stages=None):
+    """
+    Generates starter stages list
+    :param removed_stages: list of veto'd stages (exact spellings)
+    :return: string for embed value
+    """
+    # blank string
+    message = ""
+    # loop through starter stages
+    for x in range(len(starter_stages)):
+        # if removed stages is none then don't worry about striking out
+        if removed_stages is not None:
+            # crosses stage out if its in the removed_stages list
+            if starter_stages[x] in removed_stages:
+                message = f"{message}~~{starter_stages[x]}~~\n"
+            # else concatenate the new stage name regularly
+            else:
+                message = f"{message}{starter_stages[x]}\n"
+        # else concatenate the new stage name regularly
+        else:
+            message = f"{message}{starter_stages[x]}\n"
+    return message
+
+
+def counterpick_stages_message(removed_stages=None):
+    """
+    Generates counterpick stages list
+    :param removed_stages: list of veto'd stages (exact spellings)
+    :return: string for embed value
+    """
+    # blank string
+    message = ""
+    # loop through counterpick stages
+    for x in range(len(counterpick_stages)):
+        # if removed stages is none then don't worry about striking out
+        if removed_stages is not None:
+            # crosses stage out if its in the removed_stages list
+            if settings.starter_stages[x] in removed_stages:
+                message = f"{message}~~{counterpick_stages[x]}~~\n"
+            # else concatenate the new stage name regularly
+            else:
+                message = f"{message}{counterpick_stages[x]}\n"
+        # else concatenate the new stage name regularly
+        else:
+            message = f"{message}{counterpick_stages[x]}\n"
+    return message
 
 
 @bot.command()
@@ -36,7 +64,7 @@ async def veto(ctx, game, seriesLength, p2):
     """
     Starts a veto lobby with your opponent
     """
-    if game == 'smash':
+    if game == 'smash' and seriesLength == 'bo3':
         embed = discord.Embed(description=f"{ctx.author.mention} vs {p2}"
                                           f"\nThe rulebook can be found [here](https://vaughanesports.org/rules)",
                               color=discord.Color(0xffff00))
@@ -44,23 +72,97 @@ async def veto(ctx, game, seriesLength, p2):
         # game 1 embed line
         embed.add_field(name="`                         Game 1                            `",
                         value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Starter Stages", value=starter_stages, inline=True)
-        embed.add_field(name="Counterpick Stages", value=counterpick_stages, inline=True)
+        embed.add_field(name="Starter Stages", value=starter_stages_message(), inline=True)
+        embed.add_field(name="Counterpick Stages", value=counterpick_stages_message(), inline=True)
 
         # game 2 embed line
         embed.add_field(name="`                         Game 2                            `",
                         value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Starter Stages", value=starter_stages, inline=True)
-        embed.add_field(name="Counterpick Stages", value=counterpick_stages, inline=True)
+        embed.add_field(name="Starter Stages", value=starter_stages_message(), inline=True)
+        embed.add_field(name="Counterpick Stages", value=counterpick_stages_message(), inline=True)
 
         # game 3 embed line
         embed.add_field(name="`                         Game 3                            `",
                         value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Starter Stages", value=starter_stages, inline=True)
-        embed.add_field(name="Counterpick Stages", value=counterpick_stages, inline=True)
+        embed.add_field(name="Starter Stages", value=starter_stages_message(), inline=True)
+        embed.add_field(name="Counterpick Stages", value=counterpick_stages_message(), inline=True)
         embed.set_footer(icon_url="https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png",
-                         text=f"{settings.tourney_name} | DM Brandon for help or ping here.")
+                         text=f"{tourney_name} | DM Brandon for help or ping here.")
 
-        await ctx.send(embed=embed)
+        main_msg = await ctx.send(embed=embed)
+
+        # setup removed stages
+        removed_stages = []
+
+        # determine higher seed
+        player1 = ctx.author.mention
+        player2 = p2
+        player_msg = await ctx.send("Player 1 (the higher seed) say \"**me**\"")
+
+        # checks which user says me
+        def playerCheck(message):
+            return message.content == 'me' and message.channel == ctx.channel
+
+        msg = await bot.wait_for('message', check=playerCheck)
+        # changes player order if player 2 said they were first seed
+        if msg.author.mention == player2:
+            player1 = msg.author.mention
+            player2 = ctx.author.mention
+        players_msg = await ctx.send(f"Starting veto with {player1} as **Player 1** and {player2} as **Player 2**.")
+        # delete all messages and begin veto after 5 seconds
+        await asyncio.sleep(5)
+        await player_msg.delete()
+        await msg.delete()
+        await players_msg.delete()
+
+        # first game veto process
+        # starter veto
+        veto_msg = await ctx.send(f"{player1} please veto a starter.")
+
+        def stage1Check(message):
+            return message.content.title() in starter_stages and message.channel == ctx.channel
+
+        msg = await bot.wait_for('message', check=stage1Check)
+        # remove messages
+        await veto_msg.delete()
+        await msg.delete()
+        # add stage to removed list
+        removed_stages.append(msg.content.title())
+        # edit game 1 embed to remove the stage
+        embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
+        await main_msg.edit(embed=embed)
+
+        # second veto
+        veto_msg = await ctx.send(f"{player2} please veto a starter.")
+
+        def stage2Check(message):
+            return message.content.title() in starter_stages and message.channel == ctx.channel
+
+        msg = await bot.wait_for('message', check=stage2Check)
+        # remove messages
+        await veto_msg.delete()
+        await msg.delete()
+        # add stage to removed list
+        removed_stages.append(msg.content.title())
+        # edit game 1 embed to remove the stage
+        embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
+        await main_msg.edit(embed=embed)
+
+        # 3rd veto
+        veto_msg = await ctx.send(f"{player2} please veto another starter.")
+
+        def stage2Check(message):
+            return message.content.title() in starter_stages and message.channel == ctx.channel
+
+        msg = await bot.wait_for('message', check=stage2Check)
+        # remove messages
+        await veto_msg.delete()
+        await msg.delete()
+        # add stage to removed list
+        removed_stages.append(msg.content.title())
+        # edit game 1 embed to remove the stage
+        embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
+        await main_msg.edit(embed=embed)
+
 
 bot.run(BOT_TOKEN)
