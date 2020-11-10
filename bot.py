@@ -50,19 +50,38 @@ async def veto(ctx, game, seriesLength, p2):
 
         main_msg = await ctx.send(embed=embed)
 
-        # determine higher seed
-        player_msg = await ctx.send("Player 1 (the higher seed) say \"**me**\"")
+        # READY CHECK
+        await ctx.send("Say `yes` if you are ready. (Both players must ready up)")
+
+        ready = []
+
+        def readyCheck(message):
+            if message.content.lower() == 'yes' and message.author == player1 and message.channel == ctx.channel:
+                ready.append(message.author)
+            elif message.content.lower() == 'yes' and message.author == player2 and message.channel == ctx.channel:
+                ready.append(message.author)
+            return len(ready) == 2
+
+        # delete messages and proceed after both users ready up
+        await bot.wait_for('message', check=readyCheck)
+        await ctx.channel.purge(after=main_msg)
+
+        # HIGHER SEED SELECTION
+        await ctx.send("Player 1 (the higher seed) say `me`")
 
         # checks which user says me
         def playerCheck(message):
-            return message.content == 'me' and message.channel == ctx.channel
+            return message.content.lower() == 'me' and message.channel == ctx.channel
 
         msg = await bot.wait_for('message', check=playerCheck)
+
         # changes player order if player 2 said they were first seed
-        if msg.author.mention == player2:
-            player1 = msg.author.mention
-            player2 = ctx.author.mention
-        players_msg = await ctx.send(f"Starting veto with {player1.mention} as **Player 1** and {player2.mention} as **Player 2**.")
+        if msg.author == player2:
+            player1 = player2
+            player2 = ctx.author
+
+        # notifies of veto starts
+        await ctx.send(f"Starting veto with {player1.mention} as **Player 1** and {player2.mention} as **Player 2** in 5 seconds...")
         # delete all messages and begin veto after 5 seconds
         await asyncio.sleep(5)
         await ctx.channel.purge(after=main_msg)
@@ -75,25 +94,22 @@ async def veto(ctx, game, seriesLength, p2):
             return message.content.title() in starter_stages and message.content.title() not in removed_stages \
                    and message.channel == ctx.channel
 
-        # first game veto process
+        # FIRST GAME VETO PROCESS
         # cross out all counterpick stages as they are not valid for first veto
         embed.set_field_at(2, name="Counterpick Stages",
                            value=counterpick_stages_message(counterpick_stages))
         await main_msg.edit(embed=embed)
 
         for x in range(4):
-            # create msg variable
-            veto_msg = None
-
             # check which message to send
             if x == 0:
-                veto_msg = await ctx.send(f"{player1.mention} please veto a starter.")
+                await ctx.send(f"{player1.mention} please veto a starter.")
             if x == 1:
-                veto_msg = await ctx.send(f"{player2.mention} please veto a starter.")
+                await ctx.send(f"{player2.mention} please veto a starter.")
             if x == 2:
-                veto_msg = await ctx.send(f"{player2.mention} please veto another starter.")
+                await ctx.send(f"{player2.mention} please veto another starter.")
             if x == 3:
-                veto_msg = await ctx.send(f"{player1.mention} please pick a map from the remaining starters.")
+                await ctx.send(f"{player1.mention} please pick a map from the remaining starters.")
 
             # players message
             msg = await bot.wait_for('message', check=stageCheck)
