@@ -167,6 +167,7 @@ async def veto(ctx, game, seriesLength, p2):
         # remove messages
         await veto_msg.delete()
         await msg.delete()
+        # edit game 1 embed to choose a stage
         embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages, msg.content.title()))
         await main_msg.edit(embed=embed)
 
