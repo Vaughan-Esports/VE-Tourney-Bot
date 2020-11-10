@@ -120,56 +120,40 @@ async def veto(ctx, game, seriesLength, p2):
 
         # stage check function
         def stageCheck(message):
-            print(message.content.title())
             return message.content.title() in starter_stages and message.content.title() not in removed_stages \
                    and message.channel == ctx.channel
 
         # first game veto process
-        # starter veto
-        veto_msg = await ctx.send(f"{player1} please veto a starter.")
-        msg = await bot.wait_for('message', check=stageCheck)
-        # remove messages
-        await veto_msg.delete()
-        await msg.delete()
-        # add stage to removed list
-        removed_stages.append(msg.content.title())
-        # edit game 1 embed to remove the stage
-        embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
-        await main_msg.edit(embed=embed)
+        for x in range(4):
+            # create msg variable
+            veto_msg = None
+            if x == 0:
+                veto_msg = await ctx.send(f"{player1} please veto a starter.")
+            if x == 1:
+                veto_msg = await ctx.send(f"{player2} please veto a starter.")
+            if x == 2:
+                veto_msg = await ctx.send(f"{player2} please veto another starter.")
+            if x == 3:
+                veto_msg = await ctx.send(f"{player1} please pick a map from the remaining starters.")
 
-        # second veto
-        veto_msg = await ctx.send(f"{player2} please veto a starter.")
-        msg = await bot.wait_for('message', check=stageCheck)
-        # remove messages
-        await veto_msg.delete()
-        await msg.delete()
-        # add stage to removed list
-        removed_stages.append(msg.content.title())
-        # edit game 1 embed to remove the stage
-        embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
-        await main_msg.edit(embed=embed)
+            # players message
+            msg = await bot.wait_for('message', check=stageCheck)
 
-        # 3rd veto
-        veto_msg = await ctx.send(f"{player2} please veto another starter.")
-        msg = await bot.wait_for('message', check=stageCheck)
-        # remove messages
-        await veto_msg.delete()
-        await msg.delete()
-        # add stage to removed list
-        removed_stages.append(msg.content.title())
-        # edit game 1 embed to remove the stage
-        embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
-        await main_msg.edit(embed=embed)
+            # remove messages
+            await veto_msg.delete()
+            await msg.delete()
 
-        # player 1 pick
-        veto_msg = await ctx.send(f"{player1} please pick a map from the remaining starters.")
-        msg = await bot.wait_for('message', check=stageCheck)
-        # remove messages
-        await veto_msg.delete()
-        await msg.delete()
-        # edit game 1 embed to choose a stage
-        embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages, msg.content.title()))
-        await main_msg.edit(embed=embed)
+            # edit game 1 embed to remove the stage
+            if x == 3:
+                embed.set_field_at(1, name="Starter Stages",
+                                   value=starter_stages_message(removed_stages, msg.content.title()))
+            else:
+                # add stage to removed list
+                removed_stages.append(msg.content.title())
+                embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
+
+            # edit original message with new embed
+            await main_msg.edit(embed=embed)
 
 
 bot.run(BOT_TOKEN)
