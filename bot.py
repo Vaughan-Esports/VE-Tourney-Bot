@@ -68,8 +68,11 @@ async def veto(ctx, game, seriesLength, p2):
     Starts a veto lobby with your opponent
     """
     if game == 'smash' and seriesLength == 'bo3':
+        # player objects
         player1 = ctx.author
         player2 = await bot.fetch_user(p2[3:-1])
+
+        # veto embed
         embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto",
                               description=f"{player1.mention} vs {player2.mention}"
                                           f"\nThe rulebook can be found [here](https://vaughanesports.org/rules)",
@@ -97,9 +100,6 @@ async def veto(ctx, game, seriesLength, p2):
 
         main_msg = await ctx.send(embed=embed)
 
-        # setup removed stages
-        removed_stages = []
-
         # determine higher seed
         player_msg = await ctx.send("Player 1 (the higher seed) say \"**me**\"")
 
@@ -117,6 +117,9 @@ async def veto(ctx, game, seriesLength, p2):
         await asyncio.sleep(5)
         await ctx.channel.purge(after=main_msg)
 
+        # setup removed stages
+        removed_stages = []
+
         # stage check function
         def stageCheck(message):
             return message.content.title() in starter_stages and message.content.title() not in removed_stages \
@@ -126,6 +129,8 @@ async def veto(ctx, game, seriesLength, p2):
         for x in range(4):
             # create msg variable
             veto_msg = None
+
+            # check which message to send
             if x == 0:
                 veto_msg = await ctx.send(f"{player1.mention} please veto a starter.")
             if x == 1:
