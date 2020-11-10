@@ -55,6 +55,7 @@ def counterpick_stages_message(removed_stages=None, selected_stage=None):
             # crosses stage out if its in the removed_stages list
             if counterpick_stages[x] in removed_stages:
                 message = f"{message}~~{counterpick_stages[x]}~~\n"
+            # bolds the stage if its selected
             elif counterpick_stages[x] == selected_stage:
                 message = f"{message}⮕**{counterpick_stages[x]}**\n"
             # else concatenate the new stage name regularly
@@ -130,6 +131,11 @@ async def veto(ctx, game, seriesLength, p2):
                    and message.channel == ctx.channel
 
         # first game veto process
+        # cross out all counterpick stages as they are not valid for first veto
+        embed.set_field_at(2, name="Counterpick Stages",
+                           value=counterpick_stages_message(counterpick_stages))
+        await main_msg.edit(embed=embed)
+
         for x in range(4):
             # create msg variable
             veto_msg = None
