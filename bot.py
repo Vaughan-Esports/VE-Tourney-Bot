@@ -49,22 +49,6 @@ async def veto(ctx, game, seriesLength, p2):
 
         main_msg = await ctx.send(embed=embed)
 
-        # READY CHECK
-        await ctx.send("Say `yes` if you are ready. (Both players must ready up)")
-
-        ready = []
-
-        def readyCheck(message):
-            if message.content.lower() == 'yes' and message.author == player1 and message.channel == ctx.channel:
-                ready.append(message.author)
-            elif message.content.lower() == 'yes' and message.author == player2 and message.channel == ctx.channel:
-                ready.append(message.author)
-            return len(ready) == 2
-
-        # delete messages and proceed after both users ready up
-        await bot.wait_for('message', check=readyCheck)
-        await ctx.channel.purge(after=main_msg)
-
         # HIGHER SEED SELECTION
         await ctx.send("Player 1 (the higher seed) say `me`")
 
@@ -72,7 +56,7 @@ async def veto(ctx, game, seriesLength, p2):
         def playerCheck(message):
             return message.content.lower() == 'me' and message.channel == ctx.channel
 
-        msg = await bot.wait_for('message', check=playerCheck)
+        msg = await bot.wait_for('message', check=playerCheck, timeout=120)
 
         # changes player order if player 2 said they were first seed
         if msg.author == player2:
@@ -113,7 +97,7 @@ async def veto(ctx, game, seriesLength, p2):
                 await ctx.send(f"{player1.mention} please pick a map from the remaining starters.")
 
             # players message
-            msg = await bot.wait_for('message', check=stageCheck)
+            msg = await bot.wait_for('message', check=stageCheck, timeout=120)
 
             # remove messages sent after the embed
             await ctx.channel.purge(after=main_msg)
