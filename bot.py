@@ -1,6 +1,5 @@
 import asyncio
 import os
-from message_generators import *
 from discord.ext import commands
 from embed_messages import *
 
@@ -17,40 +16,16 @@ async def veto(ctx, game, seriesLength, p2):
     """
     Starts a veto lobby with your opponent
     """
-    if game == 'smash' and seriesLength == 'bo3':
+    if game.lower() == 'smash' and seriesLength.lower() == 'bo3':
         # player objects
         player1 = ctx.author
         player2 = await bot.fetch_user(p2[3:-1])
 
-        # veto embed
-        embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto",
-                              description=f"{player1.mention} vs {player2.mention}"
-                                          f"\nThe rulebook can be found [here]({rulebook_url})",
-                              color=discord.Color(0xffff00))
-
-        # game 1 embed line
-        embed.add_field(name="`                         Game 1                            `",
-                        value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Starter Stages", value=starter_stages_message(), inline=True)
-        embed.add_field(name="Counterpick Stages", value=counterpick_stages_message(), inline=True)
-
-        # game 2 embed line
-        embed.add_field(name="`                         Game 2                            `",
-                        value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Starter Stages", value=starter_stages_message(), inline=True)
-        embed.add_field(name="Counterpick Stages", value=counterpick_stages_message(), inline=True)
-
-        # game 3 embed line
-        embed.add_field(name="`                         Game 3                            `",
-                        value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Starter Stages", value=starter_stages_message(), inline=True)
-        embed.add_field(name="Counterpick Stages", value=counterpick_stages_message(), inline=True)
-        embed.set_footer(icon_url=footer_icon, text=f"{tourney_name} | {footer_note}")
-
+        # send first veto embed
+        embed = await smash_veto_bo3(player1, player2)
         main_msg = await ctx.send(embed=embed)
 
         try:
-
             # HIGHER SEED SELECTION
             await ctx.send("Player 1 (the higher seed) say `me`")
 
@@ -123,8 +98,9 @@ async def veto(ctx, game, seriesLength, p2):
             # purge all messages after original message
             await ctx.channel.purge(after=main_msg)
 
-            # create error embed and edit original message
-            await timeout_error_message(main_msg)
+            # get error embed and edit original message
+            error_embed = await timeout_error_message()
+            await main_msg.edit(embed=error_embed)
 
 
 bot.run(BOT_TOKEN)
