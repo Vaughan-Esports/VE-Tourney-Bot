@@ -1,7 +1,6 @@
 import asyncio
 import discord
 import os
-from settings import *
 from message_generators import *
 from discord.ext import commands
 
@@ -81,7 +80,9 @@ async def veto(ctx, game, seriesLength, p2):
             player2 = ctx.author
 
         # notifies of veto starts
-        await ctx.send(f"Starting veto with {player1.mention} as **Player 1** and {player2.mention} as **Player 2** in 5 seconds...")
+        await ctx.send(f"Starting veto with {player1.mention} as **Player 1** and {player2.mention} "
+                       f"as **Player 2** in 5 seconds...")
+
         # delete all messages and begin veto after 5 seconds
         await asyncio.sleep(5)
         await ctx.channel.purge(after=main_msg)

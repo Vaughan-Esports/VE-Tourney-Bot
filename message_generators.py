@@ -1,57 +1,50 @@
 from settings import *
 
 
-def starter_stages_message(removed_stages=None, selected_stage=None):
+def map_list_message(map_list, removed_maps, selected_map):
     """
-    Generates starter stages list
-    :param selected_stage: string name of the stage that is selected
-    :param removed_stages: list of veto'd stages (exact spellings)
-    :return: string for embed value
+    Base map list message generator
+    :param map_list: string list of map names
+    :param removed_maps: string list of removed maps
+    :param selected_map: string name of the selected map
+    :return: output message for embed
     """
     # blank string
     message = ""
     # loop through starter stages
-    for x in range(len(starter_stages)):
-        # if removed stages is none then don't worry about striking out
-        if removed_stages is not None:
-            # crosses stage out if its in the removed_stages list
-            if starter_stages[x] in removed_stages:
-                message = f"{message}~~{starter_stages[x]}~~\n"
-            # bolds the stage if its selected
-            elif starter_stages[x] == selected_stage:
-                message = f"{message}⮕**{starter_stages[x]}**\n"
-            # else concatenate the new stage name regularly
+    for x in range(len(map_list)):
+        # if removed maps is none then don't worry about striking out
+        if removed_maps is not None:
+            # crosses map out if its in the removed_maps list
+            if map_list[x] in removed_maps:
+                message = f"{message}~~{map_list[x]}~~\n"
+            # bolds the map if its selected
+            elif map_list[x] == selected_map:
+                message = f"{message}⮕**{map_list[x]}**\n"
+            # else concatenate the new map name regularly
             else:
-                message = f"{message}{starter_stages[x]}\n"
-        # else concatenate the new stage name regularly
+                message = f"{message}{map_list[x]}\n"
+        # concatenate the new map name regularly
         else:
-            message = f"{message}{starter_stages[x]}\n"
+            message = f"{message}{map_list[x]}\n"
     return message
 
 
-def counterpick_stages_message(removed_stages=None, selected_stage=None):
+def starter_stages_message(removed_stages=None, selected_stage=None):
     """
-    Generates counterpick stages list
+    Generates the smash starter stages list
     :param selected_stage: string name of the stage that is selected
     :param removed_stages: list of veto'd stages (exact spellings)
     :return: string for embed value
     """
-    # blank string
-    message = ""
-    # loop through counterpick stages
-    for x in range(len(counterpick_stages)):
-        # if removed stages is none then don't worry about striking out
-        if removed_stages is not None:
-            # crosses stage out if its in the removed_stages list
-            if counterpick_stages[x] in removed_stages:
-                message = f"{message}~~{counterpick_stages[x]}~~\n"
-            # bolds the stage if its selected
-            elif counterpick_stages[x] == selected_stage:
-                message = f"{message}⮕**{counterpick_stages[x]}**\n"
-            # else concatenate the new stage name regularly
-            else:
-                message = f"{message}{counterpick_stages[x]}\n"
-        # else concatenate the new stage name regularly
-        else:
-            message = f"{message}{counterpick_stages[x]}\n"
-    return message
+    map_list_message(starter_stages, removed_stages, selected_stage)
+
+
+def counterpick_stages_message(removed_stages=None, selected_stage=None):
+    """
+    Generates the smash counterpick stages list
+    :param selected_stage: string name of the stage that is selected
+    :param removed_stages: list of veto'd stages (exact spellings)
+    :return: string for embed value
+    """
+    map_list_message(counterpick_stages, removed_stages, selected_stage)
