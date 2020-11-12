@@ -37,7 +37,7 @@ def starter_stages_message(removed_stages=None, selected_stage=None):
     :param removed_stages: list of veto'd stages (exact spellings)
     :return: string for embed value
     """
-    map_list_message(starter_stages, removed_stages, selected_stage)
+    return map_list_message(starter_stages, removed_stages, selected_stage)
 
 
 def counterpick_stages_message(removed_stages=None, selected_stage=None):
@@ -47,4 +47,4 @@ def counterpick_stages_message(removed_stages=None, selected_stage=None):
     :param removed_stages: list of veto'd stages (exact spellings)
     :return: string for embed value
     """
-    map_list_message(counterpick_stages, removed_stages, selected_stage)
+    return map_list_message(counterpick_stages, removed_stages, selected_stage)
