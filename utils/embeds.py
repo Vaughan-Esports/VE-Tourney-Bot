@@ -25,7 +25,7 @@ async def timeout_error():
     return embed
 
 
-async def smash_veto_bo3(player1, player2):
+async def smash_veto_bo3(player1: object, player2: object):
     # generate embed
     embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto",
                           description=f"{player1.mention} vs {player2.mention}"

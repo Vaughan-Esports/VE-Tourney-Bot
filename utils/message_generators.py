@@ -1,7 +1,7 @@
 from settings import *
 
 
-def map_list_message(map_list, removed_maps, selected_map):
+def map_list_message(map_list: list, removed_maps: list, selected_map: str):
     """
     Base map list message generator
     :param map_list: string list of map names
