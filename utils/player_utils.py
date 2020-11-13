@@ -19,4 +19,4 @@ async def swap_players(player1: object, player2: object, player1_dsr: list, play
     p2_dsr = player1_dsr
 
     # return new player 1 and player 2
-    return p1, p2
+    return p1, p2, p1_dsr, p2_dsr
