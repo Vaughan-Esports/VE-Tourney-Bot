@@ -1,5 +1,5 @@
 import discord
-from message_generators import *
+from utils.message_generators import *
 from settings import *
 
 
