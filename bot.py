@@ -2,13 +2,12 @@ import asyncio
 import os
 from string import capwords
 
+import discord
+from discord.ext import commands
+
 from utils import embeds
 from utils import player_utils
-import discord
-import utils
-from discord.ext import commands
 from utils.message_generators import *
-
 
 intents = discord.Intents.default()
 allowed_mentions = discord.AllowedMentions(everyone=False, users=True, roles=True)
@@ -18,17 +17,23 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 
 @bot.command()
-async def veto(ctx, game, seriesLength, p2):
+async def veto(ctx, game=None, series_length=None, opponent=None):
     """
     Starts a veto lobby with your opponent
     """
-    if game.lower() == 'smash' and seriesLength.lower() == 'bo3':
+    # let user know if they're missing a parameter
+    if game is None or series_length is None or opponent is None:
+        await ctx.send(embed=await embeds.missing_param_error("Initiate a veto with `ve!veto {game} {series_length} @{"
+                                                              "opponent}`"))
+
+    # smash best of 3 veto
+    elif game.lower() == 'smash' and series_length.lower() == 'bo3':
         # starting/loading embed
         main_msg = await ctx.send(embed=await embeds.starting())
 
         # player objects
         player1 = ctx.author
-        player2 = await bot.fetch_user(p2[3:-1])
+        player2 = await bot.fetch_user(opponent[3:-1])
 
         # send first veto embed
         embed = await embeds.smash_veto_bo3(player1, player2)
@@ -299,6 +304,17 @@ async def veto(ctx, game, seriesLength, p2):
             # get error embed and edit original message
             error_embed = await embeds.timeout_error()
             await main_msg.edit(embed=error_embed)
+
+
+@bot.command()
+async def match(ctx, opponent=None):
+    # let user know if they didn't enter an opponent
+    if opponent is None:
+        await ctx.send(embed=await embeds.missing_param_error("Initiate a match chat with `ve!match @{opponent}`"))
+
+    # run command if they have proper arguments
+    else:
+        pass
 
 
 bot.run(BOT_TOKEN)
