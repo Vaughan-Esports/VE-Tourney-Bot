@@ -1,5 +1,7 @@
 import asyncio
 import os
+from string import capwords
+
 from utils import embeds
 from utils import player_utils
 import discord
@@ -63,7 +65,7 @@ async def veto(ctx, game, seriesLength, p2):
 
             # stage check function
             def stageCheck(message):
-                return message.content.title() in all_stages and message.content.title() not in removed_stages \
+                return capwords(message.content) in all_stages and capwords(message.content) not in removed_stages \
                        and message.channel == ctx.channel
 
             # FIRST GAME VETO PROCESS
@@ -94,15 +96,15 @@ async def veto(ctx, game, seriesLength, p2):
                 if x == 3:
                     # highlight selected stage
                     embed.set_field_at(1, name="Starter Stages",
-                                       value=starter_stages_message(removed_stages, msg.content.title()))
+                                       value=starter_stages_message(removed_stages, capwords(msg.content)))
 
                     # sets DSR stage to selected stage (will wipe losers DSR later)
-                    p1_dsr_stage.append(msg.content.title())
-                    p2_dsr_stage.append(msg.content.title())
+                    p1_dsr_stage.append(capwords(msg.content))
+                    p2_dsr_stage.append(capwords(msg.content))
                 # otherwise edit game 1 embed to remove the stage
                 else:
                     # add stage to removed list
-                    removed_stages.append(msg.content.title())
+                    removed_stages.append(capwords(msg.content))
                     # wipe out stage from embed
                     embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
 
@@ -153,31 +155,31 @@ async def veto(ctx, game, seriesLength, p2):
 
                 # if on stage selection
                 if x == 2:
-                    if msg.content.title() in starter_stages:
+                    if capwords(msg.content) in starter_stages:
                         # highlight selected stage
                         embed.set_field_at(4, name="Starter Stages",
-                                           value=starter_stages_message(removed_stages, msg.content.title()))
+                                           value=starter_stages_message(removed_stages, capwords(msg.content)))
 
                         # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(msg.content.title())
-                        p2_dsr_stage.append(msg.content.title())
-                    elif msg.content.title() in counterpick_stages:
+                        p1_dsr_stage.append(capwords(msg.content))
+                        p2_dsr_stage.append(capwords(msg.content))
+                    elif capwords(msg.content) in counterpick_stages:
                         # highlight selected stage
                         embed.set_field_at(5, name="Counterpick Stages",
-                                           value=counterpick_stages_message(removed_stages, msg.content.title()))
+                                           value=counterpick_stages_message(removed_stages, capwords(msg.content)))
 
                         # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(msg.content.title())
-                        p2_dsr_stage.append(msg.content.title())
+                        p1_dsr_stage.append(capwords(msg.content))
+                        p2_dsr_stage.append(capwords(msg.content))
                 else:
                     # add stage to removed list
-                    removed_stages.append(msg.content.title())
+                    removed_stages.append(capwords(msg.content))
 
                     # check which stage list to wipe out from
-                    if msg.content.title() in starter_stages:
+                    if capwords(msg.content) in starter_stages:
                         # wipe out stage from embed
                         embed.set_field_at(4, name="Starter Stages", value=starter_stages_message(removed_stages))
-                    elif msg.content.title() in counterpick_stages:
+                    elif capwords(msg.content) in counterpick_stages:
                         # wipe out stage from embed
                         embed.set_field_at(5, name="Counterpick Stages",
                                            value=counterpick_stages_message(removed_stages))
@@ -211,7 +213,7 @@ async def veto(ctx, game, seriesLength, p2):
 
                 # cross out all of game 3
                 embed.set_field_at(6, name='~~`                         Game 3                            `~~',
-                                   value='~~**Winner:**~~')
+                                   value='~~**Winner:**~~', inline=False)
                 embed.set_field_at(7, name="Starter Stages", value=starter_stages_message(starter_stages))
                 embed.set_field_at(8, name="Counterpick Stages", value=counterpick_stages_message(counterpick_stages))
                 await main_msg.edit(embed=embed)
@@ -245,31 +247,31 @@ async def veto(ctx, game, seriesLength, p2):
 
                 # if on stage selection
                 if x == 2:
-                    if msg.content.title() in starter_stages:
+                    if capwords(msg.content) in starter_stages:
                         # highlight selected stage
                         embed.set_field_at(7, name="Starter Stages",
-                                           value=starter_stages_message(removed_stages, msg.content.title()))
+                                           value=starter_stages_message(removed_stages, capwords(msg.content)))
 
                         # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(msg.content.title())
-                        p2_dsr_stage.append(msg.content.title())
-                    elif msg.content.title() in counterpick_stages:
+                        p1_dsr_stage.append(capwords(msg.content))
+                        p2_dsr_stage.append(capwords(msg.content))
+                    elif capwords(msg.content) in counterpick_stages:
                         # highlight selected stage
                         embed.set_field_at(8, name="Counterpick Stages",
-                                           value=counterpick_stages_message(removed_stages, msg.content.title()))
+                                           value=counterpick_stages_message(removed_stages, capwords(msg.content)))
 
                         # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(msg.content.title())
-                        p2_dsr_stage.append(msg.content.title())
+                        p1_dsr_stage.append(capwords(msg.content))
+                        p2_dsr_stage.append(capwords(msg.content))
                 else:
                     # add stage to removed list
-                    removed_stages.append(msg.content.title())
+                    removed_stages.append(capwords(msg.content))
 
                     # check which stage list to wipe out from
-                    if msg.content.title() in starter_stages:
+                    if capwords(msg.content) in starter_stages:
                         # wipe out stage from embed
                         embed.set_field_at(7, name="Starter Stages", value=starter_stages_message(removed_stages))
-                    elif msg.content.title() in counterpick_stages:
+                    elif capwords(msg.content) in counterpick_stages:
                         # wipe out stage from embed
                         embed.set_field_at(8, name="Counterpick Stages",
                                            value=counterpick_stages_message(removed_stages))
