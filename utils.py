@@ -1,7 +1,7 @@
 import discord
 
 
-async def swapPlayers(player1: object, player2: object, player1_dsr: list, player2_dsr: list):
+async def swap_players(player1: object, player2: object, player1_dsr: list, player2_dsr: list):
     """
     Swap players for smash veto with tracking for DSR'd stages
     :param player1: player 1
