@@ -9,6 +9,8 @@ from utils import embeds
 from utils import player_utils
 from utils.message_generators import *
 
+from veto import smash
+
 intents = discord.Intents.default()
 allowed_mentions = discord.AllowedMentions(everyone=False, users=True, roles=True)
 bot = discord.ext.commands.Bot('ve!', intents=intents, description="Tournament Bot for Vaughan Esports",
@@ -66,12 +68,6 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             removed_stages = []
             p1_dsr_stage = []
             p2_dsr_stage = []
-            all_stages = starter_stages + counterpick_stages
-
-            # stage check function
-            def stageCheck(message):
-                return capwords(message.content) in all_stages and capwords(message.content) not in removed_stages \
-                       and message.channel == ctx.channel
 
             # FIRST GAME VETO PROCESS
             # cross out all counterpick stages as they are not valid for first veto
@@ -79,44 +75,10 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
                                value=counterpick_stages_message(counterpick_stages))
             await main_msg.edit(embed=embed)
 
-            # loop through 4 stage veto's/selection
-            for x in range(4):
-                # check which message to send
-                if x == 0:
-                    await ctx.send(f"{player1.mention} please veto a starter.")
-                if x == 1:
-                    await ctx.send(f"{player2.mention} please veto a starter.")
-                if x == 2:
-                    await ctx.send(f"{player2.mention} please veto another starter.")
-                if x == 3:
-                    await ctx.send(f"{player1.mention} please select the stage from the remaining starters.")
+            # run initial game veto
+            await smash.initial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed)
 
-                # wait for players stage choice
-                msg = await bot.wait_for('message', check=stageCheck, timeout=300)
-
-                # remove messages sent after the embed
-                await ctx.channel.purge(after=main_msg)
-
-                # if stage selection
-                if x == 3:
-                    # highlight selected stage
-                    embed.set_field_at(1, name="Starter Stages",
-                                       value=starter_stages_message(removed_stages, capwords(msg.content)))
-
-                    # sets DSR stage to selected stage (will wipe losers DSR later)
-                    p1_dsr_stage.append(capwords(msg.content))
-                    p2_dsr_stage.append(capwords(msg.content))
-                # otherwise edit game 1 embed to remove the stage
-                else:
-                    # add stage to removed list
-                    removed_stages.append(capwords(msg.content))
-                    # wipe out stage from embed
-                    embed.set_field_at(1, name="Starter Stages", value=starter_stages_message(removed_stages))
-
-                # edit original message with new embed
-                await main_msg.edit(embed=embed)
-
-            # get winner of the match
+            # get winner of the game
             await ctx.send(f"{newline}GLHF! Once finished, the winner should say `me`.")
             msg = await bot.wait_for('message', check=playerCheck, timeout=1800)
 
@@ -140,57 +102,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await ctx.channel.purge(after=main_msg)
 
             # SECOND GAME VETO PROCESS
-            # reset veto'd stages
-            removed_stages = []
-
-            # loop through 3 stage veto's/selection
-            for x in range(3):
-                if x == 0:
-                    await ctx.send(f"{player1.mention} please veto a stage.")
-                elif x == 1:
-                    await ctx.send(f"{player1.mention} please veto another stage.")
-                elif x == 2:
-                    await ctx.send(f"{player2.mention} please select the stage.")
-
-                # wait for players stage choice
-                msg = await bot.wait_for('message', check=stageCheck, timeout=300)
-
-                # remove messages sent after the embed
-                await ctx.channel.purge(after=main_msg)
-
-                # if on stage selection
-                if x == 2:
-                    if capwords(msg.content) in starter_stages:
-                        # highlight selected stage
-                        embed.set_field_at(4, name="Starter Stages",
-                                           value=starter_stages_message(removed_stages, capwords(msg.content)))
-
-                        # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(capwords(msg.content))
-                        p2_dsr_stage.append(capwords(msg.content))
-                    elif capwords(msg.content) in counterpick_stages:
-                        # highlight selected stage
-                        embed.set_field_at(5, name="Counterpick Stages",
-                                           value=counterpick_stages_message(removed_stages, capwords(msg.content)))
-
-                        # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(capwords(msg.content))
-                        p2_dsr_stage.append(capwords(msg.content))
-                else:
-                    # add stage to removed list
-                    removed_stages.append(capwords(msg.content))
-
-                    # check which stage list to wipe out from
-                    if capwords(msg.content) in starter_stages:
-                        # wipe out stage from embed
-                        embed.set_field_at(4, name="Starter Stages", value=starter_stages_message(removed_stages))
-                    elif capwords(msg.content) in counterpick_stages:
-                        # wipe out stage from embed
-                        embed.set_field_at(5, name="Counterpick Stages",
-                                           value=counterpick_stages_message(removed_stages))
-
-                # edit original message with new embed
-                await main_msg.edit(embed=embed)
+            await smash.nonInitial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed, 4, 5)
 
             # get winner of the match
             await ctx.send(f"{newline}GLHF! Once finished, the winner should say `me`.")
@@ -232,57 +144,9 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await asyncio.sleep(3)
             await ctx.channel.purge(after=main_msg)
 
-            # clears removed stages adds winners DSR stage to it
-            removed_stages = [p1_dsr_stage]
-
-            # loop through 3 stage veto's/selection
-            for x in range(3):
-                if x == 0:
-                    await ctx.send(f"{player1.mention} please veto a stage.")
-                elif x == 1:
-                    await ctx.send(f"{player1.mention} please veto another stage.")
-                elif x == 2:
-                    await ctx.send(f"{player2.mention} please select the stage.")
-
-                # wait for players stage choice
-                msg = await bot.wait_for('message', check=stageCheck, timeout=300)
-
-                # remove messages sent after the embed
-                await ctx.channel.purge(after=main_msg)
-
-                # if on stage selection
-                if x == 2:
-                    if capwords(msg.content) in starter_stages:
-                        # highlight selected stage
-                        embed.set_field_at(7, name="Starter Stages",
-                                           value=starter_stages_message(removed_stages, capwords(msg.content)))
-
-                        # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(capwords(msg.content))
-                        p2_dsr_stage.append(capwords(msg.content))
-                    elif capwords(msg.content) in counterpick_stages:
-                        # highlight selected stage
-                        embed.set_field_at(8, name="Counterpick Stages",
-                                           value=counterpick_stages_message(removed_stages, capwords(msg.content)))
-
-                        # append to both DSR lists (to be removed when winner is decided
-                        p1_dsr_stage.append(capwords(msg.content))
-                        p2_dsr_stage.append(capwords(msg.content))
-                else:
-                    # add stage to removed list
-                    removed_stages.append(capwords(msg.content))
-
-                    # check which stage list to wipe out from
-                    if capwords(msg.content) in starter_stages:
-                        # wipe out stage from embed
-                        embed.set_field_at(7, name="Starter Stages", value=starter_stages_message(removed_stages))
-                    elif capwords(msg.content) in counterpick_stages:
-                        # wipe out stage from embed
-                        embed.set_field_at(8, name="Counterpick Stages",
-                                           value=counterpick_stages_message(removed_stages))
-
-                # edit original message with new embed
-                await main_msg.edit(embed=embed)
+            # runs non initial veto with player 1's DSR start on removed stages
+            await smash.nonInitial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed, 7, 8,
+                                   p1_dsr_stage)
 
             # get winner of the match
             await ctx.send(f"{newline}GLHF! Once finished, the winner should say `me`.")
