@@ -10,7 +10,7 @@ starter_stages = ["Small Battlefield", "Pokemon Stadium 2", "Smashville", "Town 
 counterpick_stages = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story"]
 
 # tourney categories
-active_channels_id = 777421991031734292
-inactive_channels_id = 777422048943013908
-guild_id = 762532363695292455
-
+active_channels_id = 777443551478153216
+inactive_channels_id = 777443021654196264
+guild_id = 688141732507942918
+TO_role_id = 729469751444635692

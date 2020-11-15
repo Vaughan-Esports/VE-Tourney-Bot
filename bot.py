@@ -266,6 +266,9 @@ async def match(ctx, opponent=None):
         guild = bot.get_guild(guild_id)
         active_category = guild.get_channel(active_channels_id)
 
+        # game coordinator role
+        game_coordinator = guild.get_role(TO_role_id)
+
         # overwrites for the match channel
         overwrites = {
             player1: discord.PermissionOverwrite(add_reactions=True, read_messages=True, send_messages=True,
@@ -274,6 +277,10 @@ async def match(ctx, opponent=None):
             player2: discord.PermissionOverwrite(add_reactions=True, read_messages=True, send_messages=True,
                                                  external_emojis=True, read_message_history=True, attach_files=True,
                                                  embed_links=True),
+            game_coordinator: discord.PermissionOverwrite(add_reactions=True, read_messages=True, send_messages=True,
+                                                          external_emojis=True, read_message_history=True,
+                                                          attach_files=True,
+                                                          embed_links=True),
             guild.default_role: discord.PermissionOverwrite(read_messages=False)
 
         }
@@ -312,6 +319,9 @@ async def close(ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def purge(ctx):
+    """
+    Purges all channels in the inactive category
+    """
     # message placeholder
     main_msg = await ctx.send(embed=await embeds.starting())
 
