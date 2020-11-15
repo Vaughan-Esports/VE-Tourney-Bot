@@ -38,7 +38,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         player2 = await bot.fetch_user(opponent[3:-1])
 
         # send first veto embed
-        embed = await embeds.smash_veto_bo3(player1, player2)
+        embed = await embeds.smash_veto(player1, player2, 3)
         await main_msg.edit(embed=embed)
 
         # run veto with catch statement in case of time out
@@ -104,6 +104,138 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await smash.nonInitial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed, 3, 7, 8)
             # final message
             await ctx.send("GG!")
+
+        # if the veto times out
+        except asyncio.TimeoutError:
+            # purge all messages after original message
+            await ctx.channel.purge(after=main_msg)
+
+            # get error embed and edit original message
+            error_embed = await embeds.timeout_error()
+            await main_msg.edit(embed=error_embed)
+
+    # elif smash bo5
+    elif game.lower() == 'smash' and series_length.lower() == 'bo5':
+        # starting/loading embed
+        main_msg = await ctx.send(embed=await embeds.starting())
+
+        # player objects
+        player1 = ctx.author
+        player2 = await bot.fetch_user(opponent[3:-1])
+
+        # send first veto embed
+        embed = await embeds.smash_veto(player1, player2, 5)
+        await main_msg.edit(embed=embed)
+
+        # run veto with catch statement in case of time out
+        try:
+            # HIGHER SEED SELECTION
+            await ctx.send(f"{newline}Player 1 (the higher seed) say `me`")
+
+            # checks which user says me
+            def playerCheck(message):
+                return message.content.lower() == 'me' and message.channel == ctx.channel
+
+            msg = await bot.wait_for('message', check=playerCheck, timeout=300)
+
+            # changes player order if player 2 said they were first seed
+            if msg.author == player2:
+                player1 = player2
+                player2 = ctx.author
+
+            # notifies of veto starts
+            await ctx.send(f"Starting veto with {player1.mention} as **Player 1** and {player2.mention} "
+                           f"as **Player 2** in 5 seconds...")
+
+            # delete all messages and begin veto after 5 seconds
+            await asyncio.sleep(5)
+            await ctx.channel.purge(after=main_msg)
+
+            # FIRST GAME VETO PROCESS
+            # cross out all counterpick stages as they are not valid for first veto
+            embed.set_field_at(2, name="Counterpick Stages",
+                               value=counterpick_stages_message(counterpick_stages))
+            await main_msg.edit(embed=embed)
+
+            # run initial game veto
+            main_msg, embed, player1, player2, p1_dsr_stage, p2_dsr_stage = await smash.initial(ctx, bot, main_msg,
+                                                                                                player1, player2,
+                                                                                                embed)
+
+            # SECOND GAME VETO PROCESS
+            main_msg, embed, player1, player2, p1_dsr_stage, p2_dsr_stage = await smash.nonInitial(ctx, bot, main_msg,
+                                                                                                   player1, player2,
+                                                                                                   p1_dsr_stage,
+                                                                                                   p2_dsr_stage, embed,
+                                                                                                   2, 4, 5)
+
+            # THIRD GAME VETO PROCESS
+            main_msg, embed, player1, player2, p1_dsr_stage, p2_dsr_stage = await smash.nonInitial(ctx, bot, main_msg,
+                                                                                                   player1, player2,
+                                                                                                   p1_dsr_stage,
+                                                                                                   p2_dsr_stage, embed,
+                                                                                                   3, 7, 8)
+            # FOURTH GAME VETO PROCESS
+            # exits if a DSR stage list is longer than 2
+            if len(p1_dsr_stage) > 2 or len(p2_dsr_stage) > 2:
+                # reset messages
+                await ctx.channel.purge(after=main_msg)
+
+                # cross out all of game 4
+                embed.set_field_at(9, name='~~`                         Game 4                            `~~',
+                                   value='~~**Winner:**~~', inline=False)
+                embed.set_field_at(10, name="Starter Stages", value=starter_stages_message(starter_stages))
+                embed.set_field_at(11, name="Counterpick Stages", value=counterpick_stages_message(counterpick_stages))
+                await main_msg.edit(embed=embed)
+
+                # cross out all of game 5
+                embed.set_field_at(12, name='~~`                         Game 5                            `~~',
+                                   value='~~**Winner:**~~', inline=False)
+                embed.set_field_at(13, name="Starter Stages", value=starter_stages_message(starter_stages))
+                embed.set_field_at(14, name="Counterpick Stages", value=counterpick_stages_message(counterpick_stages))
+                await main_msg.edit(embed=embed)
+
+                # send final message and return
+                await ctx.send('GG!')
+                return
+
+            # run veto for game 4
+            main_msg, embed, player1, player2, p1_dsr_stage, p2_dsr_stage = await smash.nonInitial(ctx, bot,
+                                                                                                   main_msg,
+                                                                                                   player1, player2,
+                                                                                                   p1_dsr_stage,
+                                                                                                   p2_dsr_stage,
+                                                                                                   embed,
+                                                                                                   4, 10, 11)
+
+            # FIFTH GAME VETO PROCESS
+            # exits if a DSR stage list is longer than 2
+            if len(p1_dsr_stage) > 2 or len(p2_dsr_stage) > 2:
+                # reset messages
+                await ctx.channel.purge(after=main_msg)
+
+                # cross out all of game 5
+                embed.set_field_at(12, name='~~`                         Game 5                            `~~',
+                                   value='~~**Winner:**~~', inline=False)
+                embed.set_field_at(13, name="Starter Stages", value=starter_stages_message(starter_stages))
+                embed.set_field_at(14, name="Counterpick Stages", value=counterpick_stages_message(counterpick_stages))
+                await main_msg.edit(embed=embed)
+
+                # send final message and return
+                await ctx.send('GG!')
+                return
+
+            # run veto for game 5
+            main_msg, embed, player1, player2, p1_dsr_stage, p2_dsr_stage = await smash.nonInitial(ctx, bot,
+                                                                                                   main_msg,
+                                                                                                   player1, player2,
+                                                                                                   p1_dsr_stage,
+                                                                                                   p2_dsr_stage,
+                                                                                                   embed,
+                                                                                                   5, 13, 14)
+
+            # final message
+            await ctx.send('GG!')
 
         # if the veto times out
         except asyncio.TimeoutError:

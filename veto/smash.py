@@ -160,7 +160,6 @@ async def nonInitial(ctx: discord.ext.commands.Context, bot: discord.ext.command
 
     # loop through 3 stage veto's/selection
     for x in range(3):
-        print(f"Inside nonInitial loop {x}:", p1_dsr_stage, p2_dsr_stage, removed_stages)
         if x == 0:
             await ctx.send(f"{player1.mention} please veto a stage.")
         elif x == 1:
