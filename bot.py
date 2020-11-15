@@ -3,6 +3,7 @@ import os
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import MissingPermissions
 
 from utils import embeds
 from utils.message_generators import *
@@ -289,6 +290,46 @@ async def match(ctx, opponent=None):
 
         # send instructions into the channel
         await match_channel.send("Once both sides are ready, invoke the veto process with `ve!veto`")
+
+
+@bot.command()
+async def close(ctx):
+    """
+    Moves the channel to the inactive category
+    """
+    # message placeholder
+    main_msg = await ctx.send(embed=await embeds.starting())
+
+    # guild and category objects
+    guild = bot.get_guild(guild_id)
+    inactive_category = guild.get_channel(inactive_channels_id)
+
+    await ctx.channel.edit(category=inactive_category)
+    # notifies users of archived channel
+    await main_msg.edit(embed=await embeds.match_archived())
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def purge(ctx):
+    # message placeholder
+    main_msg = await ctx.send(embed=await embeds.starting())
+
+    # guild and category objects
+    guild = bot.get_guild(guild_id)
+    inactive_category = guild.get_channel(inactive_channels_id)
+
+    for channel in inactive_category.text_channels:
+        await channel.delete()
+
+    await main_msg.edit(embed=await embeds.purged())
+
+
+@purge.error
+async def purge_error(ctx, error):
+    if isinstance(error, MissingPermissions):
+        await ctx.send(embed=await embeds.missing_permission_error("You don't have permission to purge tournament "
+                                                                   "channels!"))
 
 
 bot.run(BOT_TOKEN)
