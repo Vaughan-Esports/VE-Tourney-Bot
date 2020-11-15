@@ -1,14 +1,11 @@
 import asyncio
 import os
-from string import capwords
 
 import discord
 from discord.ext import commands
 
 from utils import embeds
-from utils import player_utils
 from utils.message_generators import *
-
 from veto import smash
 
 intents = discord.Intents.default()
@@ -249,13 +246,49 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
 
 @bot.command()
 async def match(ctx, opponent=None):
+    """
+    Creates a private text channel between you and your opponent(s)
+    """
     # let user know if they didn't enter an opponent
     if opponent is None:
         await ctx.send(embed=await embeds.missing_param_error("Initiate a match chat with `ve!match @{opponent}`"))
 
     # run command if they have proper arguments
     else:
-        pass
+        # send initial starting message
+        main_msg = await ctx.send(embed=await embeds.starting())
+        # player objects
+        player1 = ctx.author
+        player2 = await bot.fetch_user(opponent[3:-1])
+
+        # guild and category objects
+        guild = bot.get_guild(guild_id)
+        active_category = guild.get_channel(active_channels_id)
+
+        # overwrites for the match channel
+        overwrites = {
+            player1: discord.PermissionOverwrite(add_reactions=True, read_messages=True, send_messages=True,
+                                                 external_emojis=True, read_message_history=True, attach_files=True,
+                                                 embed_links=True),
+            player2: discord.PermissionOverwrite(add_reactions=True, read_messages=True, send_messages=True,
+                                                 external_emojis=True, read_message_history=True, attach_files=True,
+                                                 embed_links=True),
+            guild.default_role: discord.PermissionOverwrite(read_messages=False)
+
+        }
+
+        # create channel
+        match_channel = await guild.create_text_channel(f"{player1.name} vs {player2.name}",
+                                                        category=active_category,
+                                                        topic=f"{tourney_name}: {player1.name} vs {player2.name}",
+                                                        reason="User Invoked Tourney Match Channel",
+                                                        overwrites=overwrites)
+
+        # send message linking to channel
+        await main_msg.edit(embed=await embeds.match_started(match_channel))
+
+        # send instructions into the channel
+        await match_channel.send("Once both sides are ready, invoke the veto process with `ve!veto`")
 
 
 bot.run(BOT_TOKEN)

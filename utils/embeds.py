@@ -37,6 +37,18 @@ async def missing_param_error(error_message: str):
     return embed
 
 
+async def match_started(match_channel: discord.TextChannel):
+    # generate embed with yellow colour
+    embed = discord.Embed(color=discord.Colour.green())
+    # set title field
+    embed.add_field(name=f"Match Started!", value=f"Head on over to it: {match_channel.mention}")
+    # set footer
+    embed.set_footer(icon_url=footer_icon, text=f"{tourney_name} | {footer_note}")
+
+    # return finished embed
+    return embed
+
+
 async def smash_veto(player1: discord.User, player2: discord.User, max_games: int):
     # generate embed
     embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto",

@@ -8,3 +8,9 @@ newline = "_ _\n"
 # smash stages
 starter_stages = ["Small Battlefield", "Pokemon Stadium 2", "Smashville", "Town And City", "Final Destination"]
 counterpick_stages = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story"]
+
+# tourney categories
+active_channels_id = 777421991031734292
+inactive_channels_id = 777422048943013908
+guild_id = 762532363695292455
+
