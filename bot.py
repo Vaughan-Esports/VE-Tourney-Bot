@@ -41,6 +41,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         embed = await embeds.smash_veto_bo3(player1, player2)
         await main_msg.edit(embed=embed)
 
+        # run veto with catch statement in case of time out
         try:
             # HIGHER SEED SELECTION
             await ctx.send(f"{newline}Player 1 (the higher seed) say `me`")
@@ -64,11 +65,6 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await asyncio.sleep(5)
             await ctx.channel.purge(after=main_msg)
 
-            # setup stages
-            removed_stages = []
-            p1_dsr_stage = []
-            p2_dsr_stage = []
-
             # FIRST GAME VETO PROCESS
             # cross out all counterpick stages as they are not valid for first veto
             embed.set_field_at(2, name="Counterpick Stages",
@@ -76,51 +72,16 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await main_msg.edit(embed=embed)
 
             # run initial game veto
-            await smash.initial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed)
-
-            # get winner of the game
-            await ctx.send(f"{newline}GLHF! Once finished, the winner should say `me`.")
-            msg = await bot.wait_for('message', check=playerCheck, timeout=1800)
-
-            # switch player 1 to winner and player 2 to loser
-            if msg.author == player2:
-                player1, player2, p1_dsr_stage, p2_dsr_stage = await player_utils.swap_players(player1, player2,
-                                                                                               p1_dsr_stage,
-                                                                                               p2_dsr_stage)
-
-            # remove stage from losers DSR list
-            p2_dsr_stage.pop()
-
-            # edit game 1 embed message
-            embed.set_field_at(0, name="`                         Game 1                            `",
-                               value=f"**Winner:** {player1.mention}", inline=False)
-            await main_msg.edit(embed=embed)
-
-            # notify of veto and reset channel after 3 seconds
-            await ctx.send(f"Starting Game 2 veto...")
-            await asyncio.sleep(3)
-            await ctx.channel.purge(after=main_msg)
+            main_msg, embed, player1, player2, p1_dsr_stage, p2_dsr_stage = await smash.initial(ctx, bot, main_msg,
+                                                                                                player1, player2,
+                                                                                                embed)
 
             # SECOND GAME VETO PROCESS
-            await smash.nonInitial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed, 4, 5)
-
-            # get winner of the match
-            await ctx.send(f"{newline}GLHF! Once finished, the winner should say `me`.")
-            msg = await bot.wait_for('message', check=playerCheck, timeout=1800)
-
-            # switch player 1 to winner and player 2 to loser
-            if msg.author == player2:
-                player1, player2, p1_dsr_stage, p2_dsr_stage = await player_utils.swap_players(player1, player2,
-                                                                                               p1_dsr_stage,
-                                                                                               p2_dsr_stage)
-
-            # remove stage from losers DSR list
-            p2_dsr_stage.pop()
-
-            # edit game 2 embed message
-            embed.set_field_at(3, name="`                         Game 2                            `",
-                               value=f"**Winner:** {player1.mention}", inline=False)
-            await main_msg.edit(embed=embed)
+            main_msg, embed, player1, player2, p1_dsr_stage, p2_dsr_stage = await smash.nonInitial(ctx, bot, main_msg,
+                                                                                                   player1, player2,
+                                                                                                   p1_dsr_stage,
+                                                                                                   p2_dsr_stage, embed,
+                                                                                                   2, 4, 5)
 
             # THIRD GAME VETO PROCESS
             # exits if a DSR stage list is longer than 1
@@ -139,24 +100,8 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
                 await ctx.send("GG!")
                 return
 
-            # notify of veto and reset channel after 3 seconds
-            await ctx.send(f"Starting Game 3 veto...")
-            await asyncio.sleep(3)
-            await ctx.channel.purge(after=main_msg)
-
             # runs non initial veto with player 1's DSR start on removed stages
-            await smash.nonInitial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed, 7, 8,
-                                   p1_dsr_stage)
-
-            # get winner of the match
-            await ctx.send(f"{newline}GLHF! Once finished, the winner should say `me`.")
-            msg = await bot.wait_for('message', check=playerCheck, timeout=1800)
-
-            # edit game 3 embed message
-            embed.set_field_at(6, name="`                         Game 3                            `",
-                               value=f"**Winner:** {player1.mention}", inline=False)
-            await main_msg.edit(embed=embed)
-
+            await smash.nonInitial(ctx, bot, main_msg, player1, player2, p1_dsr_stage, p2_dsr_stage, embed, 3, 7, 8)
             # final message
             await ctx.send("GG!")
 
