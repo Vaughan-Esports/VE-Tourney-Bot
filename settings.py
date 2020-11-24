@@ -9,6 +9,9 @@ newline = "_ _\n"
 starter_stages = ["Small Battlefield", "Pokemon Stadium 2", "Smashville", "Town And City", "Final Destination"]
 counterpick_stages = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story"]
 
+# valorant maps
+maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
+
 # tourney categories
 active_channels_id = 777443551478153216
 inactive_channels_id = 777443021654196264
