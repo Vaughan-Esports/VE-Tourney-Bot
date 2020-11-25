@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import MissingPermissions
 import discord.ext.commands.errors
 
-from utils import embeds
+from utils import embeds, player_utils
 from utils.message_generators import *
 from veto import smash
 
@@ -15,9 +15,6 @@ allowed_mentions = discord.AllowedMentions(everyone=False, users=True, roles=Tru
 bot = discord.ext.commands.Bot('ve!', intents=intents, description="Tournament Bot for Vaughan Esports",
                                case_insensitive=True, allowed_mentions=allowed_mentions)
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-
-# startup
-print(f"[magenta]Tourney Bot Has Started")
 
 
 @bot.command()
@@ -35,9 +32,8 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         # starting/loading embed
         main_msg = await ctx.send(embed=await embeds.starting())
 
-        # player objects
-        player1 = ctx.author
-        player2 = await bot.fetch_user(opponent[3:-1])
+        # player
+        player1, player2 = await player_utils.get_players(ctx)
 
         # send first veto embed
         embed = await embeds.smash_veto(player1, player2, 3)
@@ -122,8 +118,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         main_msg = await ctx.send(embed=await embeds.starting())
 
         # player objects
-        player1 = ctx.author
-        player2 = await bot.fetch_user(opponent[3:-1])
+        player1, player2 = await player_utils.get_players(ctx)
 
         # send first veto embed
         embed = await embeds.smash_veto(player1, player2, 5)
