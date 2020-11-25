@@ -8,7 +8,7 @@ import discord.ext.commands.errors
 
 from utils import embeds, player_utils
 from utils.message_generators import *
-from veto import smash
+from veto import smash, valorant
 
 intents = discord.Intents.default()
 allowed_mentions = discord.AllowedMentions(everyone=False, users=True, roles=True)
@@ -26,6 +26,10 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
     if game is None or series_length is None or opponent is None:
         await ctx.send(embed=await embeds.missing_param_error("Initiate a veto with `ve!veto {game} {series_length} @{"
                                                               "opponent}`"))
+
+    elif ctx.channel.id in restricted_channels_ids:
+        await ctx.send(embed= await embeds.missing_permission_error("You can't do that here! Invoke a match chat first "
+                                                                    "with `ve!match {@opponent}`"))
 
     # smash best of 3 veto
     elif game.lower() == 'smash' and series_length.lower() == 'bo3':
@@ -243,6 +247,21 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             error_embed = await embeds.timeout_error()
             await main_msg.edit(embed=error_embed)
 
+    elif 'val' in game.lower():
+        main_msg = await ctx.send(embed=await embeds.starting())
+
+        # player objects
+        player1, player2 = await player_utils.get_players(ctx)
+
+        games = int(series_length[2])
+
+        # send first veto embed
+        embed = await embeds.valorant_veto(player1, player2, games)
+        await main_msg.edit(embed=embed)
+
+        embed, main_msg = await valorant.bo1(ctx, bot, main_msg, player1, player2, embed)
+        await ctx.send('GG!')
+
 
 @bot.command()
 async def match(ctx, opponent=None):
@@ -280,7 +299,7 @@ async def match(ctx, opponent=None):
                                                           external_emojis=True, read_message_history=True,
                                                           attach_files=True,
                                                           embed_links=True),
-            guild.default_role: discord.PermissionOverwrite(read_messages=False)
+            guild.default_role: discord.PermissionOverwrite(send_messages=False)
 
         }
 
@@ -295,7 +314,8 @@ async def match(ctx, opponent=None):
         await main_msg.edit(embed=await embeds.match_started(match_channel))
 
         # send instructions into the channel
-        await match_channel.send("Once both sides are ready, invoke the veto process with `ve!veto`")
+        await match_channel.send("Once both sides are ready, invoke the veto process with `ve!veto {game} "
+                                 "{series_length} {@opponent}`")
 
 
 @bot.command()
@@ -313,6 +333,14 @@ async def close(ctx):
     await ctx.channel.edit(category=inactive_category)
     # notifies users of archived channel
     await main_msg.edit(embed=await embeds.match_archived())
+
+
+@bot.command()
+async def coinflip(ctx, opponent=None):
+    if opponent is None:
+        await ctx.send(embed=await embeds.missing_param_error("You need to specify an opponent!"))
+    else:
+        await player_utils.coinflip(ctx, ctx.author, ctx.message.mentions[0])
 
 
 @bot.command()
