@@ -257,9 +257,9 @@ async def match(ctx, opponent=None):
     else:
         # send initial starting message
         main_msg = await ctx.send(embed=await embeds.starting())
+
         # player objects
-        player1 = ctx.author
-        player2 = await bot.fetch_user(opponent[3:-1])
+        player1, player2 = await player_utils.get_players(ctx)
 
         # guild and category objects
         guild = bot.get_guild(guild_id)

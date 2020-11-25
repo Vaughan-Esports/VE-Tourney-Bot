@@ -87,7 +87,7 @@ async def purged():
 
 async def smash_veto(player1: discord.User, player2: discord.User, max_games: int):
     # generate embed
-    embed = discord.Embed(title="Smash Ultimate Best-of-3 Veto",
+    embed = discord.Embed(title=f"Smash Ultimate Best-of-{max_games} Veto",
                           description=f"{player1.mention} vs {player2.mention}"
                                       f"\nThe rulebook can be found [here]({rulebook_url})",
                           color=discord.Colour.gold())
@@ -101,6 +101,26 @@ async def smash_veto(player1: discord.User, player2: discord.User, max_games: in
 
     # set footer
     embed.set_footer(icon_url=footer_icon, text=f"{tourney_name} | {footer_note}")
+
+    # return finished embed
+    return embed
+
+
+async def valorant_veto(player1: discord.User, player2: discord.User, max_games: int):
+    # generate embed
+    embed = discord.Embed(title=f"VALORANT Best-of-{max_games} Veto",
+                          description=f"**Captains:** {player1.mention}, {player2.mention}"
+                                      f"\nThe rulebook can be found [here]({rulebook_url})",
+                          color=discord.Colour.gold())
+
+    # loop through max games times and generate embed fields
+    for x in range(1, max_games + 1):
+        embed.add_field(name=f"`                         Game {x}                            `",
+                        value="**Winner:** TBD", inline=False)
+        embed.add_field(name="Maps", value=valorant_maps_message(), inline=True)
+
+        # set footer
+        embed.set_footer(icon_url=footer_icon, text=f"{tourney_name} | {footer_note}")
 
     # return finished embed
     return embed

@@ -48,3 +48,13 @@ def counterpick_stages_message(removed_stages=None, selected_stage=None):
     :return: string for embed value
     """
     return map_list_message(counterpick_stages, removed_stages, selected_stage)
+
+
+def valorant_maps_message(removed_maps=None, selected_map=None):
+    """
+    Generates the VALORANT map list
+    :param removed_maps:
+    :param selected_map:
+    :return: string embed value
+    """
+    return map_list_message(maps, removed_maps, selected_map)
