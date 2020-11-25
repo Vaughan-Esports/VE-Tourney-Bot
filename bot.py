@@ -4,16 +4,25 @@ import os
 import discord
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
+import discord.ext.commands.errors
 
 from utils import embeds
 from utils.message_generators import *
 from veto import smash
+
+# pretty tracebacks / prints
+from rich.traceback import install
+from rich import print
+install()
 
 intents = discord.Intents.default()
 allowed_mentions = discord.AllowedMentions(everyone=False, users=True, roles=True)
 bot = discord.ext.commands.Bot('ve!', intents=intents, description="Tournament Bot for Vaughan Esports",
                                case_insensitive=True, allowed_mentions=allowed_mentions)
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+
+# startup
+print(f"[magenta]Tourney Bot Has Started")
 
 
 @bot.command()
