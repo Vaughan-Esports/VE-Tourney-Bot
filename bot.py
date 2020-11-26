@@ -2,9 +2,9 @@ import asyncio
 import os
 
 import discord
+import discord.ext.commands.errors
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
-import discord.ext.commands.errors
 
 from utils import embeds, player_utils
 from utils.message_generators import *
@@ -259,8 +259,27 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         embed = await embeds.valorant_veto(player1, player2, games)
         await main_msg.edit(embed=embed)
 
-        embed, main_msg = await valorant.bo1(ctx, bot, main_msg, player1, player2, embed)
-        await ctx.send('GG!')
+        # run veto
+        try:
+            # best of 1 veto
+            if games == 1:
+                embed, main_msg = await valorant.bo1(ctx, bot, main_msg,
+                                                     player1, player2, embed)
+                await ctx.send('GG!')
+            # best of 3 veto
+            elif games == 3:
+                embed, main_msg = await valorant.bo3(ctx, bot, main_msg,
+                                                     player1, player2, embed)
+                await ctx.send('GG!')
+
+        # if the veto times out
+        except asyncio.TimeoutError:
+            # purge all messages after original message
+            await ctx.channel.purge(after=main_msg)
+
+            # get error embed and edit original message
+            error_embed = await embeds.timeout_error()
+            await main_msg.edit(embed=error_embed)
 
 
 @bot.command()
