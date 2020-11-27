@@ -30,24 +30,24 @@ def map_list_message(map_list: list, removed_maps: list, selected_map: str):
     return message
 
 
-def starter_stages_message(removed_stages=None, selected_stage=None):
+def starters_message(removed_stages=None, selected_stage=None):
     """
     Generates the smash starter stages list
     :param selected_stage: string name of the stage that is selected
     :param removed_stages: list of veto'd stages (exact spellings)
     :return: string for embed value
     """
-    return map_list_message(starter_stages, removed_stages, selected_stage)
+    return map_list_message(starters, removed_stages, selected_stage)
 
 
-def counterpick_stages_message(removed_stages=None, selected_stage=None):
+def counters_message(removed_stages=None, selected_stage=None):
     """
     Generates the smash counterpick stages list
     :param selected_stage: string name of the stage that is selected
     :param removed_stages: list of veto'd stages (exact spellings)
     :return: string for embed value
     """
-    return map_list_message(counterpick_stages, removed_stages, selected_stage)
+    return map_list_message(counters, removed_stages, selected_stage)
 
 
 def valorant_maps_message(removed_maps=None, selected_map=None):

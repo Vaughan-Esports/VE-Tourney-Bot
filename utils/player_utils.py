@@ -7,7 +7,8 @@ from discord.ext import commands
 from utils import embeds
 
 
-async def swap_players(player1: discord.User, player2: discord.User, player1_dsr: list, player2_dsr: list):
+async def swap_players(player1: discord.User, player2: discord.User,
+                       player1_dsr: list, player2_dsr: list):
     """
     Swap players for smash veto with tracking for DSR'd stages
     :param player1: player 1
@@ -52,7 +53,8 @@ async def get_players(ctx: discord.ext.commands.Context):
     return player1, player2
 
 
-async def coinflip(ctx: discord.ext.commands.Context, p1: discord.User, p2: discord.User):
+async def coinflip(ctx: discord.ext.commands.Context, p1: discord.User,
+                   p2: discord.User):
     """
     Flips a coin and chooses higher seed
     :param ctx: message context

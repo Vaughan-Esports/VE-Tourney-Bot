@@ -17,11 +17,13 @@ async def bo1(ctx: discord.ext.commands.Context, bot: discord.ext.commands.Bot,
 
     # player check function
     def playerCheck(message):
-        return message.content.lower() == 'me' and message.channel == ctx.channel
+        return message.content.lower() == 'me' \
+               and message.channel == ctx.channel
 
     # stage check function
     def mapCheck(message):
-        return capwords(message.content) in maps and message.channel == ctx.channel
+        return capwords(message.content) in maps \
+               and message.channel == ctx.channel
 
     # setup players
     player1, player2 = await player_utils.coinflip(ctx, p1, p2)
@@ -31,8 +33,8 @@ async def bo1(ctx: discord.ext.commands.Context, bot: discord.ext.commands.Bot,
     removed_maps = []
 
     # notifies of veto starts
-    await ctx.send(f"Starting veto with {player1.mention} as **Team A** and {player2.mention} "
-                   f"as **Team B** in 5 seconds...")
+    await ctx.send(f"Starting veto with {player1.mention} as **Team A** and "
+                   f"{player2.mention} as **Team B** in 5 seconds...")
 
     # delete all messages and begin veto after 5 seconds
     await asyncio.sleep(5)
@@ -73,7 +75,8 @@ async def bo1(ctx: discord.ext.commands.Context, bot: discord.ext.commands.Bot,
 
             # notify users of map and side pick
             await ctx.send(
-                f"You'll be playing on __**{selected_map}**__. {player1.mention} gets their preferred side.")
+                f"You'll be playing on __**{selected_map}**__. "
+                f"{player1.mention} gets their preferred side.")
 
         # edit original message with new embed
         await main_msg.edit(embed=embed)
@@ -85,7 +88,8 @@ async def bo1(ctx: discord.ext.commands.Context, bot: discord.ext.commands.Bot,
 
     # update winner embed
     embed.set_field_at(0,
-                       name=f"`                         Game 1                            `",
+                       name=f"`                         Game 1               "
+                            f"             `",
                        value=f"**Winner:** {msg.author.mention}", inline=False)
     await main_msg.edit(embed=embed)
 
@@ -117,8 +121,8 @@ async def bo3(ctx: discord.ext.commands.Context, bot: discord.ext.commands.Bot,
 
     # notifies of veto starts
     await ctx.send(
-        f"Starting veto with {player1.mention} as **Team A** and {player2.mention} "
-        f"as **Team B** in 5 seconds...")
+        f"Starting veto with {player1.mention} as **Team A** "
+        f"and {player2.mention} as **Team B** in 5 seconds...")
 
     # delete all messages and begin veto after 5 seconds
     await asyncio.sleep(5)
@@ -167,7 +171,8 @@ async def bo3(ctx: discord.ext.commands.Context, bot: discord.ext.commands.Bot,
 
             # notify users of map and side pick
             await ctx.send(
-                f"You'll be playing on __**{selected_map}**__. {player1.mention} gets their preferred side.")
+                f"You'll be playing on __**{selected_map}**__. "
+                f"{player1.mention} gets their preferred side.")
 
         # edit original message with new embed
         await main_msg.edit(embed=embed)
@@ -179,7 +184,8 @@ async def bo3(ctx: discord.ext.commands.Context, bot: discord.ext.commands.Bot,
 
     # update winner embed
     embed.set_field_at(0,
-                       name=f"`                         Game 1                            `",
+                       name=f"`                         Game 1               "
+                            f"             `",
                        value=f"**Winner:** {msg.author.mention}", inline=False)
     await main_msg.edit(embed=embed)
 
