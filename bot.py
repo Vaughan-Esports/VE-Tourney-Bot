@@ -376,13 +376,19 @@ async def close(ctx):
     # message placeholder
     main_msg = await ctx.send(embed=await embeds.starting())
 
-    # guild and category objects
-    guild = bot.get_guild(guild_id)
-    inactive_category = guild.get_channel(inactive_channels_id)
+    if ctx.channel.id in restricted_channels_ids:
+        text = "You can't do that here! You can only close channels in the " \
+               "active matches category."
+        await main_msg.edit(embed=await embeds.missing_permission_error(text))
 
-    await ctx.channel.edit(category=inactive_category)
-    # notifies users of archived channel
-    await main_msg.edit(embed=await embeds.match_archived())
+    else:
+        # guild and category objects
+        guild = bot.get_guild(guild_id)
+        inactive_category = guild.get_channel(inactive_channels_id)
+
+        await ctx.channel.edit(category=inactive_category)
+        # notifies users of archived channel
+        await main_msg.edit(embed=await embeds.match_archived())
 
 
 @bot.command()

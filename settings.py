@@ -18,12 +18,14 @@ counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story"]
 maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
 
 # tourney categories
-active_channels_id = 777421991031734292
-inactive_channels_id = 777422048943013908
-guild_id = 762532363695292455
-TO_role_id = 775562929675829269
+active_channels_id = 777443551478153216
+inactive_channels_id = 777443021654196264
+guild_id = 688141732507942918
+TO_role_id = 709560702225874976
+
+# last two are test channel
 restricted_channels_ids = [688534418939445315, 712960670735400991,
                            778693693569368084, 703347224985337897,
                            771131053519011860, 697935838096654347,
-                           688943624553365568, 773550892263014400,
-                           775542351640002600]  # last two are test channel
+                           688943624553365568, 688141732507942926,
+                           773550892263014400, 775542351640002600]
