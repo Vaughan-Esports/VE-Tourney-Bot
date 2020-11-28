@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-import discord
 import discord.ext.commands.errors
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
@@ -127,6 +126,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await main_msg.edit(embed=error_embed)
 
     # elif smash bo5
+    # FIXME LATER - LMAO I COPY PASTED THIS SHIT FROM BO3, DEF NOT OPTIMIZED
     elif game.lower() == 'smash' and series_length.lower() == 'bo5':
         # starting/loading embed
         main_msg = await ctx.send(embed=await embeds.starting())

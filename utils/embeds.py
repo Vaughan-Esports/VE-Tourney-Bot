@@ -1,5 +1,3 @@
-import discord
-
 from utils.message_generators import *
 
 
@@ -161,9 +159,13 @@ async def valorant_veto(player1: discord.User, player2: discord.User,
         embed.add_field(name="Maps", value=valorant_maps_message(),
                         inline=True)
 
-        # set footer
-        embed.set_footer(icon_url=footer_icon,
-                         text=f"{tourney_name} | {footer_note}")
+        embed.add_field(name="Starting Sides", value=f"**Attack:** TBD "
+                                                     f"\n**Defense:** TBD",
+                        inline=True)
+
+    # set footer
+    embed.set_footer(icon_url=footer_icon,
+                     text=f"{tourney_name} | {footer_note}")
 
     # return finished embed
     return embed

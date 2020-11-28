@@ -65,15 +65,14 @@ async def coinflip(ctx: discord.ext.commands.Context, p1: discord.User,
     player1 = None
     player2 = None
 
-    flip = await embeds.flipping_coin(3)
+    flip = await embeds.flipping_coin(5)
     coin_msg = await ctx.send(embed=flip)
 
-    # coinflip
-    for x in range(1, 3):
-        for n in range(1, 4):
-            await asyncio.sleep(0.7)
-            flip = await embeds.flipping_coin(n)
-            await coin_msg.edit(embed=flip)
+    # coinflip animation
+    for n in range(1, 5):
+        await asyncio.sleep(0.7)
+        flip = await embeds.flipping_coin(n)
+        await coin_msg.edit(embed=flip)
 
     # pick random
     num = random.randrange(0, 101)
