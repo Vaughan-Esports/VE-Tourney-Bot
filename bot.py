@@ -386,7 +386,14 @@ async def close(ctx):
         guild = bot.get_guild(guild_id)
         inactive_category = guild.get_channel(inactive_channels_id)
 
-        await ctx.channel.edit(category=inactive_category)
+        # overwrites for the match channel
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(
+                send_messages=False)
+        }
+
+        await ctx.channel.edit(category=inactive_category,
+                               overwrites=overwrites)
         # notifies users of archived channel
         await main_msg.edit(embed=await embeds.match_archived())
 
