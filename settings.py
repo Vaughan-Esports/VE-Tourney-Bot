@@ -1,5 +1,5 @@
 # embed settings
-tourney_name = "November 2020 VALORANT Monthly powered by AVGL"
+tourney_name = "December 2020 Smash Ult. Monthly"
 footer_note = "Ping Brandon for help."
 footer_icon = "https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png"
 rulebook_url = "https://vaughanesports.org/rules"
@@ -10,9 +10,10 @@ prefix = "ve!"
 description = "Tournament Bot for Vaughan Esports"
 
 # smash stages
-starters = ["Small Battlefield", "Pokemon Stadium 2", "Smashville",
+starters = ["Battlefield", "Small Battlefield", "Pokemon Stadium 2",
             "Town And City", "Final Destination"]
-counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story"]
+counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story", 
+            "Smashville"]
 
 # valorant maps
 maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
