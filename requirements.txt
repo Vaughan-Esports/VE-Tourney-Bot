@@ -4,10 +4,15 @@ attrs==20.2.0
 chardet==3.0.4
 colorama==0.4.4
 commonmark==0.9.1
-discord.py==1.5.1
+discord.py==1.6.0
+flake8==3.8.4
 idna==2.10
+mccabe==0.6.1
 multidict==4.7.6
+pycodestyle==2.6.0
+pyflakes==2.2.0
 Pygments==2.7.2
-pymongo==3.11.0
+pymongo==3.11.3
+rich==9.11.0
 typing-extensions==3.7.4.3
 yarl==1.5.1
