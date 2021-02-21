@@ -1,7 +1,5 @@
 import discord
 
-from smash.stage import Stage
-
 
 class Player:
     """
@@ -12,7 +10,7 @@ class Player:
         self.name = user.display_name
         self.mention = user.mention
 
-        self.dsr: Stage
+        self.dsr = None
 
     def __eq__(self, other: discord.Member) -> bool:
         """

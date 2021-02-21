@@ -34,6 +34,7 @@ class Match(ABC):
         self.description: str
 
         # match state
+        self.num_of_games: int = num_of_games
         self.current_game: int = 0
 
         # objects for veto
