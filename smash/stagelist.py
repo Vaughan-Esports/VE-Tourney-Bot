@@ -21,5 +21,3 @@ class StageList:
                 self.counters.append(Stage(stages[x]['name'],
                                            stages[x]['starter',
                                                      stages[x]['aliases']]))
-
-

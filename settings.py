@@ -15,17 +15,67 @@ starters = ["Battlefield", "Small Battlefield", "Pokemon Stadium 2",
 counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story",
             "Smashville"]
 
+# abbreviations: https://www.ssbwiki.com/List_of_abbreviations#Stages
 stages = [
     {'name': 'Battlefield',
      'starter': True,
      'aliases': [
-         'bf',
+         'bf'
      ]},
     {'name': 'Small Battlefield',
      'starter': True,
      'aliases': [
          'sbf',
          'small bf'
+     ]},
+    {'name': 'Pokemon Stadium 2',
+     'starter': True,
+     'aliases': [
+         'ps2'
+     ]},
+    {'name': 'Town And City',
+     'starter': True,
+     'aliases': [
+         'tan',
+         'town',
+         't&c',
+         'city',
+         'tac',
+         'tnc',
+         'tc'
+     ]},
+    {'name': 'Final Destination',
+     'starter': True,
+     'aliases': [
+         'fd',
+         'final d'
+     ]},
+    {'name': 'Kalos Pokemon League',
+     'starter': False,
+     'aliases': [
+         'kalos',
+         'kpl'
+     ]},
+    {'name': 'Lylat Cruise',
+     'starter': False,
+     'aliases': [
+         'lylat',
+         'lc'
+     ]},
+    {'name': 'Yoshi\'s Story',
+     'starter': False,
+     'aliases': [
+         'ys',
+         'yoshis',
+         'yoshi\'s',
+         'yoshi'
+     ]},
+    {'name': 'Smashville',
+     'starter': False,
+     'aliases': [
+         'sv',
+         'smashv',
+         'ville'
      ]}
 ]
 
