@@ -10,11 +10,6 @@ prefix = "ve!"
 description = "Tournament Bot for Vaughan Esports"
 
 # smash stages
-starters = ["Battlefield", "Small Battlefield", "Pokemon Stadium 2",
-            "Town And City", "Final Destination"]
-counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story",
-            "Smashville"]
-
 # abbreviations: https://www.ssbwiki.com/List_of_abbreviations#Stages
 stages = [
     {'name': 'Battlefield',

@@ -1,7 +1,5 @@
 from abc import ABC
 
-import discord
-
 from base.map import Map
 
 
@@ -17,7 +15,9 @@ class Game(ABC):
         """
         self.match_num = game_num
 
-        self.name = f'Game {game_num + 1}'
+        self.name = f'                         ' \
+                    f'Game {game_num + 1}' \
+                    f'                            '
 
         self.selected_map: Map
-        self.winner: discord.Member
+        self.winner = None
