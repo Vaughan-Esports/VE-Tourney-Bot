@@ -13,4 +13,7 @@ class Match(ABC):
 
     def __init__(self, players: List[Member], num_of_games: int):
         self.players = players
+
         self.games: List[Game]
+        self.name: str
+        self.description: str
