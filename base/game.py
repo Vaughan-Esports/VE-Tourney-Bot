@@ -3,7 +3,7 @@ from typing import List
 
 import discord
 
-from map import Map
+from base.map import Map
 
 
 class Game(ABC):
@@ -17,6 +17,7 @@ class Game(ABC):
         :param game_num: game number (starts at 0)
         :param map_pool: List of maps for the game
         """
+
         self.match_num = game_num
         self.map_pool = map_pool
 
