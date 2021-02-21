@@ -12,8 +12,22 @@ description = "Tournament Bot for Vaughan Esports"
 # smash stages
 starters = ["Battlefield", "Small Battlefield", "Pokemon Stadium 2",
             "Town And City", "Final Destination"]
-counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story", 
+counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story",
             "Smashville"]
+
+stages = [
+    {'name': 'Battlefield',
+     'starter': True,
+     'aliases': [
+         'bf',
+     ]},
+    {'name': 'Small Battlefield',
+     'starter': True,
+     'aliases': [
+         'sbf',
+         'small bf'
+     ]}
+]
 
 # valorant maps
 maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]

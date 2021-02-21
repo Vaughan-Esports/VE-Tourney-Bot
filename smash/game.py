@@ -1,7 +1,6 @@
-from typing import List
-
-import stage
 from base.game import Game
+from settings import stages
+from smash.stagelist import StageList
 
 
 class Game(Game):
@@ -9,5 +8,6 @@ class Game(Game):
     Represents a Smash game
     """
 
-    def __init__(self, game_num: int, map_pool: List[stage]):
-        super().__init__(game_num, map_pool)
+    def __init__(self, game_num: int, map_pool: StageList):
+        super().__init__(game_num)
+        self.stagelist = StageList(stages)
