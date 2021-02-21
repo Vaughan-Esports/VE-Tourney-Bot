@@ -13,3 +13,11 @@ class Player:
         self.mention = user.mention
 
         self.dsr: Stage
+
+    def __eq__(self, other: discord.Member) -> bool:
+        """
+        Compares self to discord member
+        :param other: Discord member to check
+        :return: boolean for whether they are the same
+        """
+        return self.mention == other.mention
