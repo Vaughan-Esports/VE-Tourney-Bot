@@ -5,7 +5,7 @@ chardet==3.0.4
 colorama==0.4.4
 commonmark==0.9.1
 discord.py==1.6.0
-flake8==3.8.4
+flake8==3.9.0
 idna==2.10
 mccabe==0.6.1
 multidict==5.1.0
