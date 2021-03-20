@@ -1,4 +1,8 @@
+from typing import List
+
 import discord
+
+from smash.stage import Stage
 
 
 class Player:
@@ -7,10 +11,15 @@ class Player:
     """
 
     def __init__(self, user: discord.Member):
+        """
+        Constructor method for a Smash Player
+        :param user: Discord user to grab info from
+        """
         self.name = user.display_name
         self.mention = user.mention
 
-        self.dsr = None
+        # list of DSR stages
+        self.dsr: List[Stage] = []
 
     def __eq__(self, other: discord.Member) -> bool:
         """

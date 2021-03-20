@@ -19,8 +19,11 @@ class Game(Game):
         :return:
         """
         message = ""
+        # loop through start stage names
         for x in range(len(self.stagelist.starters)):
+            # append each name to a new line in the message
             message = f'{message}{self.stagelist.starters[x]}\n'
+        # return message string
         return message
 
     def counters_embed(self) -> str:
@@ -29,6 +32,9 @@ class Game(Game):
         :return:
         """
         message = ""
+        # loop through counter stage names
         for x in range(len(self.stagelist.counters)):
+            # append each name to a new line in the message
             message = f'{message}{self.stagelist.counters[x]}\n'
+        # return message string
         return message

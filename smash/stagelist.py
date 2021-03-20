@@ -33,7 +33,7 @@ class StageList:
     def veto(self, stage: str) -> bool:
         """
         Tries to veto a stage
-        :param stage: stage to veto
+        :param stage: name/alias of stage to veto
         :return: boolean value if stage was veto'd
         """
         # search for stage in starters
