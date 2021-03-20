@@ -1,6 +1,7 @@
 from string import capwords
 from typing import List
 
+from settings import stages
 from smash.stage import Stage
 
 
@@ -9,16 +10,22 @@ class StageList:
     Represents a list of smash stages
     """
 
-    def __init__(self, stages: List[dict]):
+    def __init__(self):
+        # stage lists
         self.starters: List[Stage] = []
         self.counters: List[Stage] = []
 
+        # loops through the stages from settings
         for x in range(len(stages)):
+            # if starter bool = true
             if stages[x]['starter']:
+                # create new stage from info and add to starters
                 self.starters.append(Stage(stages[x]['name'],
                                            stages[x]['starter',
                                                      stages[x]['aliases']]))
+            # if starter bool = false
             else:
+                # create new stage from info and add to counters
                 self.counters.append(Stage(stages[x]['name'],
                                            stages[x]['starter',
                                                      stages[x]['aliases']]))

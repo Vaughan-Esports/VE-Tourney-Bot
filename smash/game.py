@@ -1,5 +1,4 @@
 from base.game import Game
-from settings import stages
 from smash.stagelist import StageList
 
 
@@ -10,7 +9,7 @@ class Game(Game):
 
     def __init__(self, game_num: int):
         super().__init__(game_num)
-        self.stagelist: StageList = StageList(stages)
+        self.stagelist: StageList = StageList()
         # stage veto / selection process state
         self.state = 0
 
