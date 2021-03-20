@@ -55,7 +55,6 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await ctx.send(embed=await embeds.timeout_error())
 
     # elif smash bo5
-    # FIXME LATER - LMAO I COPY PASTED THIS SHIT FROM BO3, DEF NOT OPTIMIZED
     elif game.lower() == 'smash' and series_length.lower() == 'bo5':
         # player objects
         player1, player2 = await player_utils.get_players(ctx)
@@ -73,38 +72,22 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await ctx.send(embed=await embeds.timeout_error())
 
     elif 'val' in game.lower():
-        main_msg = await ctx.send(embed=await embeds.starting())
-
         # player objects
         player1, player2 = await player_utils.get_players(ctx)
 
         games = int(series_length[2])
 
         # send first veto embed
-        embed = await embeds.valorant_veto(player1, player2, games)
-        await main_msg.edit(embed=embed)
+        await ctx.send(embed=embeds.valorant_veto(player1, player2, games))
 
         # run veto
         try:
-            # best of 1 veto
-            if games == 1:
-                embed, main_msg = await valorant.bo1(ctx, bot, main_msg,
-                                                     player1, player2, embed)
-                await ctx.send('GG!')
-            # best of 3 veto
-            elif games == 3:
-                embed, main_msg = await valorant.bo3(ctx, bot, main_msg,
-                                                     player1, player2, embed)
-                await ctx.send('GG!')
+
 
         # if the veto times out
         except asyncio.TimeoutError:
-            # purge all messages after original message
-            await ctx.channel.purge(after=main_msg)
-
             # get error embed and edit original message
-            error_embed = await embeds.timeout_error()
-            await main_msg.edit(embed=error_embed)
+            await ctx.send(embed=await embeds.timeout_error())
 
 
 @bot.command()

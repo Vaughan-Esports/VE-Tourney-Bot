@@ -1,4 +1,3 @@
-import asyncio
 import random
 
 import discord
@@ -65,15 +64,6 @@ async def coinflip(ctx: discord.ext.commands.Context, p1: discord.User,
     player1 = None
     player2 = None
 
-    flip = await embeds.flipping_coin(5)
-    coin_msg = await ctx.send(embed=flip)
-
-    # coinflip animation
-    for n in range(1, 5):
-        await asyncio.sleep(0.7)
-        flip = await embeds.flipping_coin(n)
-        await coin_msg.edit(embed=flip)
-
     # pick random
     num = random.randrange(0, 101)
     if num % 2 == 0:
@@ -82,6 +72,6 @@ async def coinflip(ctx: discord.ext.commands.Context, p1: discord.User,
     elif num % 2 == 1:
         player1 = p2
         player2 = p1
-    await coin_msg.edit(embed=await embeds.coinflip_winner(player1))
+    await ctx.send(embed=await embeds.coinflip_winner(player1))
 
     return player1, player2
