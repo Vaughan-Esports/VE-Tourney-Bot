@@ -5,6 +5,8 @@ import discord.ext.commands.errors
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
 
+from smash.match import Match
+from smash.player import Player
 from utils import embeds, player_utils
 from utils.message_generators import *
 
@@ -39,50 +41,21 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
 
     # smash best of 3 veto
     elif game.lower() == 'smash' and '3' in series_length:
-        # player
+        # get players
         player1, player2 = await player_utils.get_players(ctx)
+
+        # initialize game
+        match = Match([Player(player1), Player(player2)], 3)
 
         # send first veto embed
         await ctx.send(embed=await embeds.smash_veto(player1, player2, 3))
 
         # run veto with catch statement in case of time out
         try:
-
-
-        # if the veto times out
-        except asyncio.TimeoutError:
-            # get error embed and edit original message
-            await ctx.send(embed=await embeds.timeout_error())
-
-    # elif smash bo5
-    elif game.lower() == 'smash' and series_length.lower() == 'bo5':
-        # player objects
-        player1, player2 = await player_utils.get_players(ctx)
-
-        # send first veto embed
-        await ctx.send(embed=await embeds.smash_veto(player1, player2, 5))
-
-        # run veto with catch statement in case of time out
-        try:
-
-
-        # if the veto times out
-        except asyncio.TimeoutError:
-            # get error embed and edit original message
-            await ctx.send(embed=await embeds.timeout_error())
-
-    elif 'val' in game.lower():
-        # player objects
-        player1, player2 = await player_utils.get_players(ctx)
-
-        games = int(series_length[2])
-
-        # send first veto embed
-        await ctx.send(embed=embeds.valorant_veto(player1, player2, games))
-
-        # run veto
-        try:
-
+            player1, player2 = await player_utils.seed_selection(ctx,
+                                                                 bot,
+                                                                 player1,
+                                                                 player2)
 
         # if the veto times out
         except asyncio.TimeoutError:

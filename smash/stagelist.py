@@ -21,14 +21,14 @@ class StageList:
             if stages[x]['starter']:
                 # create new stage from info and add to starters
                 self.starters.append(Stage(stages[x]['name'],
-                                           stages[x]['starter',
-                                                     stages[x]['aliases']]))
+                                           stages[x]['starter'],
+                                           stages[x]['aliases']))
             # if starter bool = false
             else:
                 # create new stage from info and add to counters
                 self.counters.append(Stage(stages[x]['name'],
-                                           stages[x]['starter',
-                                                     stages[x]['aliases']]))
+                                           stages[x]['starter'],
+                                           stages[x]['aliases']))
 
     def veto(self, stage: str) -> bool:
         """

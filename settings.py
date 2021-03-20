@@ -78,10 +78,10 @@ stages = [
 maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
 
 # tourney categories
-active_channels_id = 777443551478153216
-inactive_channels_id = 777443021654196264
-guild_id = 688141732507942918
-TO_role_id = 709560702225874976
+active_channels_id = 777421991031734292
+inactive_channels_id = 777422048943013908
+guild_id = 762532363695292455
+TO_role_id = 822710142985830410
 
 # last two are test channel
 restricted_channels_ids = [688534418939445315, 712960670735400991,

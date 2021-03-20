@@ -2,6 +2,7 @@ from abc import ABC
 from typing import List
 
 from base.game import Game
+from smash.player import Player
 
 
 class Match(ABC):
@@ -9,7 +10,7 @@ class Match(ABC):
     Base class representing a match
     """
 
-    def __init__(self, players, num_of_games: int, ):
+    def __init__(self, players: List[Player], num_of_games: int, ):
         """
         Constructs a match object
         :param players: list of players
