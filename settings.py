@@ -2,8 +2,8 @@
 tourney_name = "December 2020 Smash Ult. Monthly"
 footer_note = "Ping Brandon for help."
 footer_icon = "https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png"
-rulebook_url = "https://vaughanesports.org/rules"
-newline = "_ _\n"
+rulebook_url = "https://vaughanesports.org/rules"  # url to rulebook
+newline = "_ _\n"  # dont touch me
 
 # bot settings
 prefix = "ve!"
