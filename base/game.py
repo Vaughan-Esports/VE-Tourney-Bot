@@ -15,9 +15,9 @@ class Game(ABC):
         """
         self.match_num = game_num
 
-        self.name = f'                         ' \
-                    f'Game {game_num + 1}' \
-                    f'                            '
+        self.name = f"`                         " \
+                    f"Game {game_num + 1}" \
+                    f"                            `"
 
         self.selected_map: Map
         self.winner = None
