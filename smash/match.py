@@ -1,20 +1,28 @@
 from typing import List
 
-from base.match import Match
 from smash.game import Game
 from smash.player import Player
 
 
-class Match(Match):
+class Match:
     """
     Represents a Smash match
     """
 
-    def __init__(self, players: List[Player], num_of_games: int, ):
-        super().__init__(players, num_of_games)
+    def __init__(self, player1: Player, player2: Player, num_of_games: int):
+        # players
+        self.player1 = player1
+        self.player2 = player2
+
+        # match data
+        self.games: List[Game]
+        self.name: str
+        self.description: str
+
+        # match state
+        self.num_of_games: int = num_of_games
+        self.current_game: int = 0
 
         # generate blank games
-        self.games: List[Game] = []
-        self.game_num = 0
         for x in range(num_of_games):
             self.games.append(Game(x))
