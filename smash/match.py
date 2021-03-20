@@ -1,5 +1,6 @@
 from typing import List
 
+from settings import rulebook_url, tourney_name
 from smash.game import Game
 from smash.player import Player
 
@@ -15,9 +16,12 @@ class Match:
         self.player2 = player2
 
         # match data
-        self.games: List[Game]
-        self.name: str
-        self.description: str
+        self.games: List[Game] = []
+        self.name: str = f"{tourney_name}: {player1.name} vs {player2.name}"
+        self.description: str = f"{self.player1.mention} vs " \
+                                f"{self.player2.mention} " \
+                                f"\nThe rulebook can be found " \
+                                f"[here]({rulebook_url})"
 
         # match state
         self.num_of_games: int = num_of_games

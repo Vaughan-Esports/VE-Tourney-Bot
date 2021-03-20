@@ -80,8 +80,7 @@ async def coinflip(ctx: discord.ext.commands.Context, p1: discord.User,
 
 async def seed_selection(ctx: discord.ext.commands.Context,
                          bot: discord.ext.commands.Bot,
-                         player1: discord.User,
-                         player2: discord.User):
+                         match):
     # HIGHER SEED SELECTION
     await ctx.send(f"{newline}Player 1 (the higher seed) say `me`")
 
@@ -93,13 +92,11 @@ async def seed_selection(ctx: discord.ext.commands.Context,
     msg = await bot.wait_for('message', check=playerCheck, timeout=300)
 
     # changes player order if player 2 said they were first seed
-    if msg.author == player2:
-        player1 = player2
-        player2 = ctx.author
+    if msg.author == match.player2:
+        match.player1 = match.player2
+        match.player2 = ctx.author
 
     # notifies of veto starts
-    await ctx.send(f"Starting veto with {player1.mention} as "
-                   f"**Player 1** and {player2.mention} "
+    await ctx.send(f"Starting veto with {match.player1.mention} as "
+                   f"**Player 1** and {match.player2.mention} "
                    f"as **Player 2** in 5 seconds...")
-
-    return player1, player2

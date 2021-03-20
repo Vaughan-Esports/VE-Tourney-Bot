@@ -1,4 +1,5 @@
 from base.game import Game
+from smash.stage import Stage
 from smash.stagelist import StageList
 
 
@@ -8,7 +9,13 @@ class Game(Game):
     """
 
     def __init__(self, game_num: int):
-        super().__init__(game_num)
+        self.name = f"`                         " \
+                    f"Game {game_num + 1}" \
+                    f"                            `"
+
+        self.selected_map: Stage
+        self.winner = None
+
         self.stagelist: StageList = StageList()
         # stage veto / selection process state
         self.state = 0

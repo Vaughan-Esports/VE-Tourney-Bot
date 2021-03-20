@@ -45,17 +45,15 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         player1, player2 = await player_utils.get_players(ctx)
 
         # initialize game
-        match = Match([Player(player1), Player(player2)], 3)
+        match = Match(Player(player1), Player(player2), 3)
 
         # send first veto embed
         await ctx.send(embed=await embeds.smash_veto(3, match))
 
         # run veto with catch statement in case of time out
         try:
-            player1, player2 = await player_utils.seed_selection(ctx,
-                                                                 bot,
-                                                                 player1,
-                                                                 player2)
+            # run seed selection
+            await player_utils.seed_selection(ctx, bot, match)
 
         # if the veto times out
         except asyncio.TimeoutError:

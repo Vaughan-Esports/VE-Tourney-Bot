@@ -116,10 +116,8 @@ async def coinflip_winner(winner: discord.User):
 
 async def smash_veto(max_games: int, match: match.Match):
     # generate embed
-    desc = f"{match.players[0].mention} vs {match.players[1].mention} " \
-           f"\nThe rulebook can be found [here]({rulebook_url})"
     embed = discord.Embed(title=f"Smash Ultimate Best-of-{max_games} Veto",
-                          description=desc,
+                          description=match.description,
                           color=discord.Colour.gold())
 
     # loop through max games times and generate embed fields
