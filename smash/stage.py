@@ -1,9 +1,7 @@
 from typing import List
 
-from base.map import Map
 
-
-class Stage(Map):
+class Stage:
     """
     Represents a Smash stage
     """
@@ -15,6 +13,20 @@ class Stage(Map):
         :param starter: if stage is a starter
         :param aliases: alias names for the stage
         """
-        super().__init__(name)
+        self.name = name
+        self.veto = False
+        self.chosen = False
         self.starter = starter
         self.aliases = aliases
+
+    def __str__(self) -> str:
+        """
+        String representation of a map
+        :return:
+        """
+        if self.veto:
+            return f'~~{self.name}~~'
+        elif self.chosen:
+            return f'⮕**{self.name}~~'
+        else:
+            return self.name

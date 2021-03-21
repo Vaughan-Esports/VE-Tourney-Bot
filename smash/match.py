@@ -40,9 +40,7 @@ class Match:
                                    color=discord.Colour.gold())
         # loop through max games times and generate embed fields
         for x in range(1, num_of_games + 1):
-            self.embed.add_field(name=f"`                         "
-                                      f"Game {x}"
-                                      f"                         `",
+            self.embed.add_field(name=self.games[x - 1].name,
                                  value="**Winner:** TBD", inline=False)
             # x - 1 because its using index num
             self.embed.add_field(name="Starter Stages",

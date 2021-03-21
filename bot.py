@@ -48,7 +48,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         match = Match(Player(player1), Player(player2), 3)
 
         # send first veto embed
-        await ctx.send(embed=await embeds.smash_veto(3, match))
+        await ctx.send(embed=match.embed)
 
         # run veto with catch statement in case of time out
         try:
