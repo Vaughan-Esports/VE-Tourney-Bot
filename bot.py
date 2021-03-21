@@ -55,6 +55,9 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             # run seed selection
             await player_utils.seed_selection(ctx, bot, match)
 
+            # FIRST GAME VETO
+
+
         # if the veto times out
         except asyncio.TimeoutError:
             # get error embed and edit original message

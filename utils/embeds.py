@@ -1,4 +1,3 @@
-from smash import match
 from utils.message_generators import *
 
 
@@ -109,34 +108,6 @@ async def coinflip_winner(winner: discord.User):
     embed = discord.Embed(colour=discord.Colour.green())
     # set starting field
     embed.set_author(name=f"{winner.name} won the coinflip!")
-
-    # return finished embed
-    return embed
-
-
-async def smash_veto(max_games: int, match: match.Match):
-    # generate embed
-    embed = discord.Embed(title=f"Smash Ultimate Best-of-{max_games} Veto",
-                          description=match.description,
-                          color=discord.Colour.gold())
-
-    # loop through max games times and generate embed fields
-    for x in range(1, max_games + 1):
-        embed.add_field(
-            name=f"`                         Game {x}                         "
-                 f"   `",
-            value="**Winner:** TBD", inline=False)
-        # x - 1 because its using index num
-        embed.add_field(name="Starter Stages",
-                        value=match.games[x - 1].starters_embed(),
-                        inline=True)
-        embed.add_field(name="Counterpick Stages",
-                        value=match.games[x - 1].counters_embed(),
-                        inline=True)
-
-    # set footer
-    embed.set_footer(icon_url=footer_icon,
-                     text=f"{tourney_name} | {footer_note}")
 
     # return finished embed
     return embed

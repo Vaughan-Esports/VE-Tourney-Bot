@@ -20,6 +20,11 @@ class Game(Game):
         # stage veto / selection process state
         self.state = 0
 
+        # auto veto counters if first game
+        if game_num == 0:
+            for x in range(len(self.stagelist.counters)):
+                self.stagelist.counters[x].veto = True
+
     def starters_embed(self) -> str:
         """
         Generate embed string for stagelist starters
