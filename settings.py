@@ -4,6 +4,7 @@ footer_note = "Ping Brandon for help."
 footer_icon = "https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png"
 rulebook_url = "https://vaughanesports.org/rules"  # url to rulebook
 newline = "_ _\n"  # dont touch me
+hide_map_on_veto = True  # covers stage in spoiler tag when veto
 
 # bot settings
 prefix = "ve!"
@@ -89,3 +90,6 @@ restricted_channels_ids = [688534418939445315, 712960670735400991,
                            771131053519011860, 697935838096654347,
                            688943624553365568, 688141732507942926,
                            773550892263014400, 775542351640002600]
+
+# timeout settings (in seconds)
+veto_timeout = 1800

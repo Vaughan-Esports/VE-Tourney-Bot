@@ -17,11 +17,12 @@ class Player:
         """
         self.name = user.display_name
         self.mention = user.mention
+        self.wins = 0
 
         # list of DSR stages
         self.dsr: List[Stage] = []
 
-    def __eq__(self, other: discord.Member) -> bool:
+    def __eq__(self, other) -> bool:
         """
         Compares self to discord member
         :param other: Discord member to check

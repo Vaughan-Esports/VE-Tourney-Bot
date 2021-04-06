@@ -1,4 +1,7 @@
+from string import capwords
 from typing import List
+
+from settings import hide_map_on_veto
 
 
 class Stage:
@@ -25,8 +28,21 @@ class Stage:
         :return:
         """
         if self.veto:
-            return f'~~{self.name}~~'
+            name = f'~~{self.name}~~'
+            # surround in spoiler tags if hiding
+            if hide_map_on_veto:
+                name = f'||{name}||'
+            # return the name of the stage
+            return name
         elif self.chosen:
-            return f'⮕**{self.name}~~'
+            return f'⮕**{self.name}**'
         else:
             return self.name
+
+    def __eq__(self, stage: str) -> bool:
+        """
+        Compares a string of the stage name to its name and aliases
+        :param stage: string name of the stage
+        :return: boolean if matching
+        """
+        return capwords(stage) == self.name or stage.lower() in self.aliases

@@ -4,29 +4,9 @@ import discord
 from discord.ext import commands
 
 from settings import newline
+from smash.player import Player
 from utils import embeds
-
-
-async def swap_players(player1: discord.User, player2: discord.User,
-                       player1_dsr: list, player2_dsr: list):
-    """
-    Swap players for smash veto with tracking for DSR'd stages
-    :param player1: player 1
-    :param player2: player 2
-    :param player1_dsr: player 1's DSR stage(s)
-    :param player2_dsr: player 2's DSR stage(s)
-    :return: new player1 and player2
-    """
-    # swap player objects
-    p1 = player2
-    p2 = player1
-
-    # swap player DSR's
-    p1_dsr = player2_dsr
-    p2_dsr = player1_dsr
-
-    # return new player 1 and player 2
-    return p1, p2, p1_dsr, p2_dsr
+from utils.checks import playerCheck
 
 
 async def get_players(ctx: discord.ext.commands.Context):
@@ -84,17 +64,16 @@ async def seed_selection(ctx: discord.ext.commands.Context,
     # HIGHER SEED SELECTION
     await ctx.send(f"{newline}Player 1 (the higher seed) say `me`")
 
-    # checks which user says me
-    def playerCheck(message):
-        return message.content.lower() == 'me' \
-               and message.channel == ctx.channel
+    msg = await bot.wait_for('message', check=playerCheck(ctx), timeout=300)
 
-    msg = await bot.wait_for('message', check=playerCheck, timeout=300)
+    # placeholders
+    p1 = match.player1
+    p2 = match.player2
 
     # changes player order if player 2 said they were first seed
-    if msg.author == match.player2:
-        match.player1 = match.player2
-        match.player2 = ctx.author
+    if Player(msg.author) == match.player2:
+        match.player1 = p2
+        match.player2 = p1
 
     # notifies of veto starts
     await ctx.send(f"Starting veto with {match.player1.mention} as "

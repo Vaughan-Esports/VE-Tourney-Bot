@@ -31,7 +31,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
     # let user know if they're missing a parameter
     if game is None or series_length is None or opponent is None:
         text = "Initiate a veto with `ve!veto {game} " \
-               "{series_length (3 or 5)} @{opponent}` "
+               "{best-of (3 or 5)} @{opponent}` "
         await ctx.send(embed=await embeds.missing_param_error(text))
 
     elif ctx.channel.id in restricted_channels_ids:
@@ -40,23 +40,23 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         await ctx.send(embed=await embeds.missing_permission_error(text))
 
     # smash best of 3 veto
-    elif game.lower() == 'smash' and '3' in series_length:
+    elif game.lower() == 'smash' and \
+            series_length == '3' or series_length == '5':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
 
         # initialize game
-        match = Match(Player(player1), Player(player2), 3)
-
-        # send first veto embed
-        await ctx.send(embed=match.embed)
+        match = Match(Player(player1), Player(player2), int(series_length))
 
         # run veto with catch statement in case of time out
         try:
             # run seed selection
             await player_utils.seed_selection(ctx, bot, match)
+            await asyncio.sleep(5)
 
-            # FIRST GAME VETO
-
+            # run veto's
+            while match.winner is None:
+                await match.veto(ctx, bot)
 
         # if the veto times out
         except asyncio.TimeoutError:

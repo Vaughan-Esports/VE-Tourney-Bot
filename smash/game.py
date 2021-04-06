@@ -1,4 +1,3 @@
-from smash.stage import Stage
 from smash.stagelist import StageList
 
 
@@ -8,16 +7,14 @@ class Game:
     """
 
     def __init__(self, game_num: int):
-        self.name = f"`                         " \
+        self.name = f"`                    " \
                     f"Game {game_num + 1}" \
-                    f"                         `"
+                    f"                     `"
 
-        self.selected_map: Stage
+        self.selected_stage = None
         self.winner = None
 
         self.stagelist: StageList = StageList()
-        # stage veto / selection process state
-        self.state = 0
 
         # auto veto counters if first game
         if game_num == 0:
@@ -49,3 +46,28 @@ class Game:
             message = f'{message}{self.stagelist.counters[x]}\n'
         # return message string
         return message
+
+    def winner_embed(self) -> str:
+        """
+        Generate embed string for winner line
+        :return:
+        """
+        message = "**Winner:**"
+        if self.winner is None:
+            return f"{message} TBD"
+        else:
+            return f"{message} {self.winner.mention}"
+
+    def choose_stage(self, stage: str):
+        """
+        Tries to choose a stage
+        :param stage: name/alias of stage to chose
+        """
+        self.selected_stage = self.stagelist.choose(stage)
+
+    def veto_stage(self, stage: str):
+        """
+        Tries to veto a stage
+        :param stage: name/alias of stage to veto
+        """
+        self.stagelist.veto(stage)
