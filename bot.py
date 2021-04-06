@@ -28,16 +28,23 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
     """
     Starts a veto lobby with your opponent
     """
+
+    # guild and category objects
+    guild = bot.get_guild(guild_id)
+    active_category = guild.get_channel(active_channels_id)
+
+    # check if a valid place to start matches
+    if ctx.channel not in active_category.text_channels or \
+            ctx.channel.id == match_creation_channel_id:
+        text = "You can't do that here! Invoke a match chat first with " \
+               "`a!match {@opponent}`"
+        await ctx.send(embed=await embeds.missing_permission_error(text))
+
     # let user know if they're missing a parameter
-    if game is None or series_length is None or opponent is None:
+    elif game is None or series_length is None or opponent is None:
         text = "Initiate a veto with `ve!veto {game} " \
                "{best-of (3 or 5)} @{opponent}` "
         await ctx.send(embed=await embeds.missing_param_error(text))
-
-    elif ctx.channel.id in restricted_channels_ids:
-        text = "You can't do that here! Invoke a match chat first with " \
-               "`ve!match {@opponent}`"
-        await ctx.send(embed=await embeds.missing_permission_error(text))
 
     # smash best of 3 veto
     elif game.lower() == 'smash' and \
@@ -69,68 +76,82 @@ async def match(ctx, opponent=None):
     """
     Creates a private text channel between you and your opponent(s)
     """
+    # checks that this it he correct channel to use
+    if ctx.channel.id != match_creation_channel_id:
+        # get match creation channel object
+        match_channel = bot.get_channel(match_creation_channel_id)
+
+        # tell user they have to do it over in match creation channel
+        text = f"You can't do that here! Invoke a match chat first over at " \
+               f"{match_channel.mention}"
+        await ctx.send(embed=await embeds.missing_permission_error(text))
+
     # let user know if they didn't enter an opponent
-    if opponent is None:
+    elif opponent is None:
         text = "Initiate a match chat with `ve!match @{opponent}`"
         await ctx.send(embed=await embeds.missing_param_error(text))
         return
 
-    # run command if they have proper arguments
-    # send initial starting message
-    main_msg = await ctx.send(embed=await embeds.starting())
+    else:
+        # run command if they have proper arguments
+        # send initial starting message
+        main_msg = await ctx.send(embed=await embeds.starting())
 
-    # player objects
-    player1, player2 = await player_utils.get_players(ctx)
+        # player objects
+        player1, player2 = await player_utils.get_players(ctx)
 
-    # guild and category objects
-    guild = bot.get_guild(guild_id)
-    active_category = guild.get_channel(active_channels_id)
+        # guild and category objects
+        guild = bot.get_guild(guild_id)
+        active_category = guild.get_channel(active_channels_id)
 
-    # game coordinator role
-    game_coordinator = guild.get_role(TO_role_id)
+        # game coordinator role
+        game_coordinator = guild.get_role(TO_role_id)
 
-    # overwrites for the match channel
-    overwrites = {
-        player1: discord.PermissionOverwrite(add_reactions=True,
-                                             read_messages=True,
-                                             send_messages=True,
-                                             external_emojis=True,
-                                             attach_files=True,
-                                             embed_links=True),
+        # overwrites for the match channel
+        overwrites = {
+            player1: discord.PermissionOverwrite(add_reactions=True,
+                                                 read_messages=True,
+                                                 send_messages=True,
+                                                 external_emojis=True,
+                                                 attach_files=True,
+                                                 embed_links=True),
 
-        player2: discord.PermissionOverwrite(add_reactions=True,
-                                             read_messages=True,
-                                             send_messages=True,
-                                             external_emojis=True,
-                                             attach_files=True,
-                                             embed_links=True),
+            player2: discord.PermissionOverwrite(add_reactions=True,
+                                                 read_messages=True,
+                                                 send_messages=True,
+                                                 external_emojis=True,
+                                                 attach_files=True,
+                                                 embed_links=True),
 
-        game_coordinator: discord.PermissionOverwrite(add_reactions=True,
-                                                      read_messages=True,
-                                                      send_messages=True,
-                                                      external_emojis=True,
-                                                      attach_files=True,
-                                                      embed_links=True),
-        guild.default_role: discord.PermissionOverwrite(send_messages=False)
-    }
+            game_coordinator: discord.PermissionOverwrite(add_reactions=True,
+                                                          read_messages=True,
+                                                          send_messages=True,
+                                                          external_emojis=True,
+                                                          attach_files=True,
+                                                          embed_links=True),
+            guild.default_role: discord.PermissionOverwrite(
+                send_messages=False,
+                read_messages=True)
+        }
 
-    # create channel
-    name = f"{player1.name} vs {player2.name}"
-    topic = f"{tourney_name}: {player1.name} vs {player2.name}"
-    reason = "User invoked tourney match channel"
-    match_channel = await guild.create_text_channel(name,
-                                                    category=active_category,
-                                                    topic=topic,
-                                                    reason=reason,
-                                                    overwrites=overwrites)
+        # create channel
+        name = f"{player1.name} vs {player2.name}"
+        topic = f"{tourney_name}: {player1.name} vs {player2.name}"
+        reason = "User invoked tourney match channel"
+        match_channel = await \
+            guild.create_text_channel(name,
+                                      category=active_category,
+                                      topic=topic,
+                                      reason=reason,
+                                      overwrites=overwrites)
 
-    # send message linking to channel
-    await main_msg.edit(embed=await embeds.match_started(match_channel))
+        # send message linking to channel
+        await main_msg.edit(embed=await embeds.match_started(match_channel))
 
-    # send instructions into the channel
-    await match_channel.send("Once both sides are ready, invoke the veto "
-                             "process with `ve!veto {game} "
-                             "{series_length} {@opponent}`")
+        # send instructions into the channel
+        await match_channel.send("Once both sides are ready, invoke the veto "
+                                 "process with `a!veto "
+                                 "{3 or 5} {@opponent}`")
 
 
 @bot.command()
@@ -138,29 +159,46 @@ async def close(ctx):
     """
     Moves the channel to the inactive category
     """
-    # message placeholder
-    main_msg = await ctx.send(embed=await embeds.starting())
+    # guild and category objects
+    guild = bot.get_guild(guild_id)
+    active_category = guild.get_channel(active_channels_id)
 
-    if ctx.channel.id in restricted_channels_ids:
+    # let user know the channel isn't an active match channel
+    if ctx.channel not in active_category.text_channels:
         text = "You can't do that here! You can only close channels in the " \
                "active matches category."
-        await main_msg.edit(embed=await embeds.missing_permission_error(text))
+        await ctx.send(embed=await embeds.missing_permission_error(text))
+
+    # let user know they can't close this channel
+    elif ctx.channel.id == match_creation_channel_id:
+        text = "You can't close this channel! It's not a match channel :smile:"
+        await ctx.send(embed=await embeds.missing_permission_error(text))
 
     else:
+        # notifies users of archived channel
+        await ctx.send(embed=await embeds.match_archived())
+
         # guild and category objects
         guild = bot.get_guild(guild_id)
         inactive_category = guild.get_channel(inactive_channels_id)
+        # game coordinator role
+        game_coordinator = guild.get_role(TO_role_id)
 
         # overwrites for the match channel
         overwrites = {
             guild.default_role: discord.PermissionOverwrite(
-                send_messages=False)
+                send_messages=False,
+                read_messages=True),
+            game_coordinator: discord.PermissionOverwrite(add_reactions=True,
+                                                          read_messages=True,
+                                                          send_messages=True,
+                                                          external_emojis=True,
+                                                          attach_files=True,
+                                                          embed_links=True)
         }
 
         await ctx.channel.edit(category=inactive_category,
                                overwrites=overwrites)
-        # notifies users of archived channel
-        await main_msg.edit(embed=await embeds.match_archived())
 
 
 @bot.command()

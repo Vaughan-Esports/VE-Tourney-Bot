@@ -84,12 +84,8 @@ inactive_channels_id = 777422048943013908
 guild_id = 762532363695292455
 TO_role_id = 822710142985830410
 
-# last two are test channel
-restricted_channels_ids = [688534418939445315, 712960670735400991,
-                           778693693569368084, 703347224985337897,
-                           771131053519011860, 697935838096654347,
-                           688943624553365568, 688141732507942926,
-                           773550892263014400, 775542351640002600]
+# channel where matches can be started
+match_creation_channel_id = 828867315256000513
 
 # timeout settings (in seconds)
 veto_timeout = 1800
