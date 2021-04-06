@@ -4,6 +4,9 @@ footer_note = "Ping Brandon for help."
 footer_icon = "https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png"
 rulebook_url = "https://vaughanesports.org/rules"  # url to rulebook
 newline = "_ _\n"  # dont touch me
+
+# one of these should be on at least
+cross_map_on_veto = True  # crosses out the stage when veto
 hide_map_on_veto = True  # covers stage in spoiler tag when veto
 
 # bot settings

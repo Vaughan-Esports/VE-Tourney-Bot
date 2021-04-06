@@ -37,7 +37,7 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
     if ctx.channel not in active_category.text_channels or \
             ctx.channel.id == match_creation_channel_id:
         text = "You can't do that here! Invoke a match chat first with " \
-               "`a!match {@opponent}`"
+               "`ve!match {@opponent}`"
         await ctx.send(embed=await embeds.missing_permission_error(text))
 
     # let user know if they're missing a parameter
@@ -150,8 +150,9 @@ async def match(ctx, opponent=None):
 
         # send instructions into the channel
         await match_channel.send("Once both sides are ready, invoke the veto "
-                                 "process with `a!veto "
-                                 "{3 or 5} {@opponent}`")
+                                 "process with `ve!veto {game}"
+                                 "{best-of (3 or 5)} {@opponent}`. "
+                                 "For example: `ve!veto smash 3 @Harry`")
 
 
 @bot.command()
@@ -201,13 +202,14 @@ async def close(ctx):
                                overwrites=overwrites)
 
 
-@bot.command()
+@bot.command(aliases=['flip'])
 async def coinflip(ctx, opponent=None):
     if opponent is None:
         text = "You need to specify an opponent!"
         await ctx.send(embed=await embeds.missing_param_error(text))
     else:
-        await player_utils.coinflip(ctx, ctx.author, ctx.message.mentions[0])
+        player1, player2 = await player_utils.get_players(ctx)
+        await player_utils.coinflip(ctx, player1, player2)
 
 
 @bot.command()

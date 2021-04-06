@@ -107,7 +107,8 @@ async def coinflip_winner(winner: discord.User):
     # generate embed with green colour
     embed = discord.Embed(colour=discord.Colour.green())
     # set starting field
-    embed.set_author(name=f"{winner.name} won the coinflip!")
+    embed.add_field(name="Coinflip",
+                    value=f"{winner.mention} won the coinflip!")
 
     # return finished embed
     return embed

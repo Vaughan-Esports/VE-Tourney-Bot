@@ -1,7 +1,7 @@
 from string import capwords
 from typing import List
 
-from settings import hide_map_on_veto
+from settings import hide_map_on_veto, cross_map_on_veto
 
 
 class Stage:
@@ -28,7 +28,10 @@ class Stage:
         :return:
         """
         if self.veto:
-            name = f'~~{self.name}~~'
+            name = self.name
+            # surround in cross out if crossing
+            if cross_map_on_veto:
+                name = f'~~{name}~~'
             # surround in spoiler tags if hiding
             if hide_map_on_veto:
                 name = f'||{name}||'
