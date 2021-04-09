@@ -79,7 +79,7 @@ stages = [
 ]
 
 # valorant maps
-maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
+val_maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
 
 # tourney categories
 active_channels_id = 777421991031734292
