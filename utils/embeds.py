@@ -1,4 +1,6 @@
-from utils.message_generators import *
+import discord
+
+from settings import tourney_name, footer_note, footer_icon
 
 
 async def starting():
@@ -30,6 +32,19 @@ async def missing_param_error(error_message: str):
     embed = discord.Embed(color=discord.Colour.red())
     # set title field
     embed.add_field(name=f"Missing Parameter Error", value=error_message)
+    # set footer
+    embed.set_footer(icon_url=footer_icon,
+                     text=f"{tourney_name} | {footer_note}")
+
+    # return finished embed
+    return embed
+
+
+async def invalid_param_error(error_message: str):
+    # generate embed with red colour
+    embed = discord.Embed(color=discord.Colour.red())
+    # set title field
+    embed.add_field(name=f"Invalid Parameter Error", value=error_message)
     # set footer
     embed.set_footer(icon_url=footer_icon,
                      text=f"{tourney_name} | {footer_note}")
@@ -93,79 +108,12 @@ async def purged():
     return embed
 
 
-async def flipping_coin(dot):
-    # generate embed with blue colour
-    embed = discord.Embed(colour=discord.Colour.blue())
-    # set starting field
-    embed.set_author(name=f"Flipping coin{'.' * dot}")
-
-    # return finished embed
-    return embed
-
-
 async def coinflip_winner(winner: discord.User):
     # generate embed with green colour
     embed = discord.Embed(colour=discord.Colour.green())
     # set starting field
-    embed.set_author(name=f"{winner.name} won the coinflip!")
-
-    # return finished embed
-    return embed
-
-
-async def smash_veto(player1: discord.User, player2: discord.User,
-                     max_games: int):
-    # generate embed
-    desc = f"{player1.mention} vs {player2.mention} " \
-           f"\nThe rulebook can be found [here]({rulebook_url})"
-    embed = discord.Embed(title=f"Smash Ultimate Best-of-{max_games} Veto",
-                          description=desc,
-                          color=discord.Colour.gold())
-
-    # loop through max games times and generate embed fields
-    for x in range(1, max_games + 1):
-        embed.add_field(
-            name=f"`                         Game {x}                         "
-                 f"   `",
-            value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Starter Stages", value=starters_message(),
-                        inline=True)
-        embed.add_field(name="Counterpick Stages",
-                        value=counters_message(), inline=True)
-
-    # set footer
-    embed.set_footer(icon_url=footer_icon,
-                     text=f"{tourney_name} | {footer_note}")
-
-    # return finished embed
-    return embed
-
-
-async def valorant_veto(player1: discord.User, player2: discord.User,
-                        max_games: int):
-    # generate embed
-    desc = f"**Captains:** {player1.mention}, {player2.mention} " \
-           f"\nThe rulebook can be found [here]({rulebook_url})"
-    embed = discord.Embed(title=f"VALORANT Best-of-{max_games} Veto",
-                          description=desc,
-                          color=discord.Colour.gold())
-
-    # loop through max games times and generate embed fields
-    for x in range(1, max_games + 1):
-        embed.add_field(
-            name=f"`                         Game {x}                         "
-                 f"   `",
-            value="**Winner:** TBD", inline=False)
-        embed.add_field(name="Maps", value=valorant_maps_message(),
-                        inline=True)
-
-        embed.add_field(name="Starting Sides", value=f"**Attack:** TBD "
-                                                     f"\n**Defense:** TBD",
-                        inline=True)
-
-    # set footer
-    embed.set_footer(icon_url=footer_icon,
-                     text=f"{tourney_name} | {footer_note}")
+    embed.add_field(name="Coinflip",
+                    value=f"{winner.mention} won the coinflip!")
 
     # return finished embed
     return embed

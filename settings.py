@@ -1,32 +1,98 @@
 # embed settings
 tourney_name = "December 2020 Smash Ult. Monthly"
-footer_note = "Ping Brandon for help."
+footer_note = "© Brandon Ly 2021"
 footer_icon = "https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png"
-rulebook_url = "https://vaughanesports.org/rules"
-newline = "_ _\n"
+rulebook_url = "https://vaughanesports.org/rules"  # url to rulebook
+newline = "_ _\n"  # dont touch me
+
+# one of these should be on at least
+cross_map_on_veto = True  # crosses out the stage when veto
+hide_map_on_veto = True  # covers stage in spoiler tag when veto
 
 # bot settings
 prefix = "ve!"
 description = "Tournament Bot for Vaughan Esports"
 
 # smash stages
-starters = ["Battlefield", "Small Battlefield", "Pokemon Stadium 2",
-            "Town And City", "Final Destination"]
-counters = ["Kalos Pokemon League", "Lylat Cruise", "Yoshi's Story", 
-            "Smashville"]
+# abbreviations: https://www.ssbwiki.com/List_of_abbreviations#Stages
+stages = [
+    {'name': 'Battlefield',
+     'starter': True,
+     'aliases': [
+         'bf'
+     ]},
+    {'name': 'Small Battlefield',
+     'starter': True,
+     'aliases': [
+         'sbf',
+         'small bf'
+     ]},
+    {'name': 'Pokemon Stadium 2',
+     'starter': True,
+     'aliases': [
+         'ps2'
+     ]},
+    {'name': 'Town And City',
+     'starter': True,
+     'aliases': [
+         'tan',
+         'town',
+         't&c',
+         'city',
+         'tac',
+         'tnc',
+         'tc'
+     ]},
+    {'name': 'Final Destination',
+     'starter': True,
+     'aliases': [
+         'fd',
+         'final d'
+     ]},
+    {'name': 'Kalos Pokemon League',
+     'starter': False,
+     'aliases': [
+         'kalos',
+         'kpl'
+     ]},
+    {'name': 'Lylat Cruise',
+     'starter': False,
+     'aliases': [
+         'lylat',
+         'lc'
+     ]},
+    {'name': 'Yoshi\'s Story',
+     'starter': False,
+     'aliases': [
+         'ys',
+         'yoshis',
+         'yoshi\'s',
+         'yoshi'
+     ]},
+    {'name': 'Smashville',
+     'starter': False,
+     'aliases': [
+         'sv',
+         'smashv',
+         'ville'
+     ]}
+]
 
 # valorant maps
-maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
+val_maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
 
 # tourney categories
-active_channels_id = 777443551478153216
-inactive_channels_id = 777443021654196264
-guild_id = 688141732507942918
-TO_role_id = 709560702225874976
+active_channels_id = 777421991031734292
+inactive_channels_id = 777422048943013908
+guild_id = 762532363695292455
+TO_role_id = 822710142985830410
 
-# last two are test channel
-restricted_channels_ids = [688534418939445315, 712960670735400991,
-                           778693693569368084, 703347224985337897,
-                           771131053519011860, 697935838096654347,
-                           688943624553365568, 688141732507942926,
-                           773550892263014400, 775542351640002600]
+# channel where matches can be started
+match_creation_channel_id = 828867315256000513
+
+# timeout settings (in seconds)
+veto_timeout = 1800
+
+# example commands (discord formatting)
+smash_example = '`ve!smash 3 @Brandon`'
+valorant_example = '`ve!val 1 @Brandon`'
