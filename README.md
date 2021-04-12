@@ -10,8 +10,6 @@
   <p align="center">
     Home of Vaughan Esports' very own Discord Bot used to run our events!
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
     <br />
     <a href="https://vaughanesports.org/discord">View Demo</a>
     ·
