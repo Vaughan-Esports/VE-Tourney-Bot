@@ -182,6 +182,102 @@ class Match:
                 # refresh embed
                 await ctx.send(embed=self.embed)
 
+        # BO5 VETO
+        # FIXME: most definitely can be better, but its 4am xd
+        elif self.num_of_games == 5:
+            for x in range(9):
+                # GAME 1
+                if x == 0:
+                    await ctx.send(
+                        f"{self.captain1.mention} select a map for game 1.")
+                elif x == 1:
+                    await ctx.send(
+                        f"{self.captain2.mention} what is your "
+                        f"preferred starting side for game 1?")
+                    await self.sideSelection(ctx, bot, 2)
+                    # update current game
+                    self.current_game += 1
+                    # refresh embed
+                    await ctx.send(embed=self.embed)
+                    # skip to next step
+                    continue
+
+                # GAME 2
+                elif x == 2:
+                    await ctx.send(
+                        f"{self.captain2.mention} select a map for game 2.")
+                elif x == 3:
+                    await ctx.send(
+                        f"{self.captain1.mention} what is your "
+                        f"preferred starting side for game 2?")
+                    await self.sideSelection(ctx, bot, 1)
+                    # update current game
+                    self.current_game += 1
+                    # refresh embed
+                    await ctx.send(embed=self.embed)
+                    # skip to next step
+                    continue
+
+                # GAME 3
+                elif x == 4:
+                    await ctx.send(
+                        f"{self.captain1.mention} select a map for game 3.")
+                elif x == 5:
+                    await ctx.send(
+                        f"{self.captain2.mention} what is your "
+                        f"preferred starting side for game 3?")
+                    await self.sideSelection(ctx, bot, 2)
+                    # update current game
+                    self.current_game += 1
+                    # refresh embed
+                    await ctx.send(embed=self.embed)
+                    # skip to next step
+                    continue
+
+                # GAME 4
+                elif x == 6:
+                    await ctx.send(
+                        f"{self.captain2.mention} select a map for game 4.")
+                elif x == 7:
+                    await ctx.send(
+                        f"{self.captain1.mention} what is your "
+                        f"preferred starting side for game 4?")
+                    await self.sideSelection(ctx, bot, 1)
+                    # update current game
+                    self.current_game += 1
+                    # refresh embed
+                    await ctx.send(embed=self.embed)
+                    # skip to next step
+                    continue
+
+                msg = await bot.wait_for('message',
+                                         check=mapCheck(ctx, self),
+                                         timeout=veto_timeout)
+
+                if x % 2 == 0:
+                    # choose map for these games
+                    self.games[self.current_game].choose(msg.content)
+                    # loop through and veto from rest (chosen takes over veto)
+                    for game in self.games:
+                        game.veto_map(msg.content)
+
+                # FIXME: idk some way to do this better but it s 4am now xd
+                elif x == 8:
+                    # choose last map
+                    self.games[self.current_game].choose_last()
+
+                    # refresh embed
+                    await ctx.send(embed=self.embed)
+
+                    # side selection for last game
+                    await ctx.send(
+                        f"{self.captain1.mention} what is your "
+                        f"preferred starting side for game 3?")
+                    await self.sideSelection(ctx, bot, 1)
+
+                # refresh embed
+                await ctx.send(embed=self.embed)
+
     async def sideSelection(self, ctx, bot, chooser):
         # get side message
         msg = await bot.wait_for('message',

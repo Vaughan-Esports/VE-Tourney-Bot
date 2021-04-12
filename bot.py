@@ -74,7 +74,10 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             await ctx.send(embed=await embeds.timeout_error())
 
     # VALORANT VETO
-    elif 'val' in game.lower():
+    elif 'val' in game.lower() and \
+            series_length == '1' or \
+            series_length == '3' or \
+            series_length == '5':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
 
