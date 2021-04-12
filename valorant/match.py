@@ -1,8 +1,11 @@
 from typing import List
 
 import discord
+from discord.ext import commands
 
-from settings import tourney_name, rulebook_url, footer_icon, footer_note
+from settings import tourney_name, rulebook_url, footer_icon, footer_note, \
+    veto_timeout
+from utils.checks import mapCheck
 from valorant.game import Game
 
 
@@ -57,3 +60,35 @@ class Match:
                          text=f"{tourney_name} | {footer_note}")
 
         return embed
+
+    async def veto(self, ctx: discord.ext.commands.Context,
+                   bot: discord.ext.commands.Bot):
+        # send first embed
+        await ctx.send(embed=self.embed)
+
+        # Bo1 VETO
+        if self.num_of_games == 1:
+            for x in range(4):
+                if x == 0:
+                    await ctx.send(
+                        f"{self.captain1.mention} please veto a map.")
+                elif x == 1:
+                    await ctx.send(
+                        f"{self.captain2.mention} please veto a map.")
+                elif x == 2:
+                    await ctx.send(
+                        f"{self.captain1.mention} please veto another map.")
+                elif x == 3:
+                    await ctx.send(
+                        f"{self.captain2.mention} please veto another map.")
+                elif x == 4:
+                    await ctx.send(
+                        f"{self.captain1.mention} what is your "
+                        f"preferred starting side?")
+
+                msg = await bot.wait_for('message',
+                                         check=mapCheck(ctx, self),
+                                         timeout=veto_timeout)
+
+                # if veto'ing
+                if x != 3

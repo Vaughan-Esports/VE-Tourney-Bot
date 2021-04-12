@@ -17,6 +17,7 @@ class Player:
         """
         self.name = user.display_name
         self.mention = user.mention
+        self.id = user.id
         self.wins = 0
 
         # list of DSR stages
@@ -28,4 +29,4 @@ class Player:
         :param other: Discord member to check
         :return: boolean for whether they are the same
         """
-        return self.mention == other.mention
+        return self.id == other.id

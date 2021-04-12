@@ -25,7 +25,9 @@ class MapPool:
         """
         # search through map for match
         for val_map in self.maps:
-            if val_map == item:
+            if val_map == item and \
+                    not val_map.veto and \
+                    not val_map.chosen:
                 return True
 
         # else return false if it wasn't found

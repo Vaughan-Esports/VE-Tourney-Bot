@@ -111,25 +111,6 @@ class Match:
                 # regenerate and send embed
                 await ctx.send(embed=self.embed)
 
-            # get winner
-            await ctx.send(f"{newline}GLHF! Once finished, "
-                           f"the winner should say `me`.")
-            msg = await bot.wait_for('message',
-                                     check=playerCheck(ctx),
-                                     timeout=veto_timeout)
-
-            # swap player 1 if player 2 was winner
-            if msg.author == self.player2:
-                await self.swap_players()
-
-            # add stage to winner dsr list
-            self.player1.dsr.append(
-                self.games[self.current_game].selected_stage)
-
-            # set the game winner
-            self.games[self.current_game].winner = self.player1
-            self.player1.wins += 1
-
         # subsequent veto
         else:
             # loop through 3 stage veto's/selection process
@@ -159,24 +140,24 @@ class Match:
                 # regenerate and send embed
                 await ctx.send(embed=self.embed)
 
-            # get winner
-            await ctx.send(f"{newline}GLHF! Once finished, "
-                           f"the winner should say `me`.")
-            msg = await bot.wait_for('message',
-                                     check=playerCheck(ctx),
-                                     timeout=veto_timeout)
+        # get winner
+        await ctx.send(f"{newline}GLHF! Once finished, "
+                       f"the winner should say `me`.")
+        msg = await bot.wait_for('message',
+                                 check=playerCheck(ctx),
+                                 timeout=veto_timeout)
 
-            # swap player 1 if player 2 was winner
-            if msg.author.mention == self.player2.mention:
-                await self.swap_players()
+        # swap player 1 if player 2 was winner
+        if msg.author.id == self.player2.id:
+            self.swap_players()
 
-            # add stage to winner dsr list
-            self.player1.dsr.append(
-                self.games[self.current_game].selected_stage)
+        # add stage to winner dsr list
+        self.player1.dsr.append(
+            self.games[self.current_game].selected_stage)
 
-            # set the game winner
-            self.games[self.current_game].winner = self.player1
-            self.player1.wins += 1
+        # set the game winner
+        self.games[self.current_game].winner = self.player1
+        self.player1.wins += 1
 
         # check if the match has a winner
         if self.player1.wins >= (self.num_of_games // 2) + 1:
@@ -196,7 +177,7 @@ class Match:
             await ctx.send('Starting next game veto...')
             await asyncio.sleep(3)
 
-    async def swap_players(self):
+    def swap_players(self):
         """
         Swap player1 and player2
         """
