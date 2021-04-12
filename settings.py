@@ -1,5 +1,5 @@
 # embed settings
-tourney_name = "December 2020 Smash Ult. Monthly"
+tourney_name = "VE Anniversary Series: Spike Rush Event"
 footer_note = "© Brandon Ly 2021"
 footer_icon = "https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png"
 rulebook_url = "https://vaughanesports.org/rules"  # url to rulebook

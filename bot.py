@@ -1,9 +1,11 @@
 import asyncio
 import os
+from os.path import join, dirname
 
 import discord.ext.commands.errors
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
+from dotenv import load_dotenv
 
 from settings import active_channels_id, inactive_channels_id
 from settings import guild_id, TO_role_id, match_creation_channel_id
@@ -23,6 +25,9 @@ bot = discord.ext.commands.Bot(command_prefix=prefix,
                                description=description,
                                case_insensitive=True,
                                allowed_mentions=allowed_mentions)
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
