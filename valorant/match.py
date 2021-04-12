@@ -104,7 +104,7 @@ class Match:
                 # otherwise select side
                 else:
                     # run side selection
-                    await self.sideSelection(ctx, bot)
+                    await self.sideSelection(ctx, bot, 1)
 
                 # resend embed
                 await ctx.send(embed=self.embed)

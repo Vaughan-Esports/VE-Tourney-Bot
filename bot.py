@@ -5,10 +5,13 @@ import discord.ext.commands.errors
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
 
+from settings import active_channels_id, inactive_channels_id
+from settings import guild_id, TO_role_id, match_creation_channel_id
+from settings import prefix, description, tourney_name
+from settings import smash_example, valorant_example
 from smash.match import Match as SmashMatch
 from smash.player import Player
 from utils import embeds, player_utils
-from utils.message_generators import *
 from valorant.match import Match as ValMatch
 
 intents = discord.Intents.default()
@@ -72,6 +75,11 @@ async def smash(ctx, series_length=None, opponent=None):
             # get error embed and edit original message
             await ctx.send(embed=await embeds.timeout_error())
 
+    else:
+        text = f"Matches must either be a best of 3 or 5.\n\n" \
+               f"Example: {smash_example}"
+        await ctx.send(embed=await embeds.invalid_param_error(text))
+
 
 @bot.command(aliases=['valorant'])
 async def val(ctx, series_length=None, opponent=None):
@@ -103,6 +111,13 @@ async def val(ctx, series_length=None, opponent=None):
         player1, player2 = await player_utils.coinflip(ctx, player1, player2)
         # initialize game
         match = ValMatch(player1, player2, int(series_length))
+
+        # start delay
+        await ctx.send(f"Starting veto with {player1.mention} as "
+                       f"**Captain 1** and {player2.mention} "
+                       f"as **Captain 2** in 5 seconds...")
+        await asyncio.sleep(5)
+
         # run veto
         try:
             await match.veto(ctx, bot)
@@ -113,8 +128,9 @@ async def val(ctx, series_length=None, opponent=None):
             await ctx.send(embed=await embeds.timeout_error())
 
     else:
-        text = "Matches must either be a best of 1, 3, or 5."
-        await ctx.send(embed=await embeds.missing_param_error(text))
+        text = f"Matches must either be a best of 1, 3, or 5.\n\n" \
+               f"Example: {valorant_example}"
+        await ctx.send(embed=await embeds.invalid_param_error(text))
 
 
 @bot.command()

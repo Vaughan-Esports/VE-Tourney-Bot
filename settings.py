@@ -92,3 +92,7 @@ match_creation_channel_id = 828867315256000513
 
 # timeout settings (in seconds)
 veto_timeout = 1800
+
+# example commands (discord formatting)
+smash_example = '`ve!smash 3 @Brandon`'
+valorant_example = '`ve!val 1 @Brandon`'
