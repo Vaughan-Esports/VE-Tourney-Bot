@@ -35,3 +35,17 @@ def mapCheck(ctx, match):
                and message.channel == ctx.channel
 
     return func
+
+
+def sideCheck(ctx):
+    """
+    Check if valid valorant side
+    :param ctx: discord context to check for channel
+    :return:
+    """
+
+    def func(message):
+        return ('att' in message.content or 'def' in message.content) and \
+               message.channel == ctx.channel
+
+    return func

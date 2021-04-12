@@ -93,16 +93,6 @@ async def purged():
     return embed
 
 
-async def flipping_coin(dot):
-    # generate embed with blue colour
-    embed = discord.Embed(colour=discord.Colour.blue())
-    # set starting field
-    embed.set_author(name=f"Flipping coin{'.' * dot}")
-
-    # return finished embed
-    return embed
-
-
 async def coinflip_winner(winner: discord.User):
     # generate embed with green colour
     embed = discord.Embed(colour=discord.Colour.green())

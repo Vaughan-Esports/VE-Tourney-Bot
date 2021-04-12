@@ -1,4 +1,4 @@
-from map_pool import MapPool
+from valorant.map_pool import MapPool
 
 
 class Game:
@@ -17,17 +17,6 @@ class Game:
 
         self.att_start = None
         self.def_start = None
-
-    def winner_embed(self) -> str:
-        """
-        Generate embed string for winner line
-        :return:
-        """
-        message = "**Winner:**"
-        if self.winner is None:
-            return f"{message} TBD"
-        else:
-            return f"{message} {self.winner.mention}"
 
     def map_embed(self) -> str:
         """
@@ -68,12 +57,20 @@ class Game:
 
     def choose(self, name: str):
         """
-        Tries to choose a map
+        Tries to choose a map, veto's all maps that aren't chosen
         :param name:
-        :return: map that was chosen
         """
         for x in range(len(self.map_pool.maps)):
             if self.map_pool.maps[x] == name:
                 # if matching change th state of the map and return it
                 self.map_pool.maps[x].chosen = True
-                return self.map_pool.maps[x]
+            # veto map if not the chosen one
+            self.map_pool.maps[x].veto = True
+
+    def choose_last(self):
+        """
+        Chooses the last map that isn't veto'd
+        """
+        for val_map in self.map_pool.maps:
+            if not val_map.veto:
+                val_map.chosen = True

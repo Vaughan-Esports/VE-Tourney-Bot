@@ -22,7 +22,9 @@ class Map:
         String representation of the map
         :return: string of map
         """
-        if self.veto:
+        if self.chosen:
+            return f'⮕**{self.name}**'
+        elif self.veto:
             name = self.name
             # surround in cross out if crossing
             if cross_map_on_veto:
@@ -32,8 +34,6 @@ class Map:
                 name = f'||{name}||'
             # return the name of the stage
             return name
-        elif self.chosen:
-            return f'⮕**{self.name}**'
         else:
             return self.name
 

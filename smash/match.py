@@ -116,13 +116,15 @@ class Match:
             # loop through 3 stage veto's/selection process
             for x in range(3):
                 if x == 0:
-                    await ctx.send(f"{self.player1.mention}, veto a stage.")
+                    await ctx.send(
+                        f"{self.player1.mention}, veto a stage.")
                 elif x == 1:
                     await ctx.send(
                         f"{self.player1.mention}, veto another stage.")
                 elif x == 2:
                     await ctx.send(
                         f"{self.player2.mention}, select the stage.")
+
                 # wait for players stage choice
                 msg = await bot.wait_for('message',
                                          check=stageCheck(ctx, self),
@@ -164,6 +166,7 @@ class Match:
             self.winner = self.player1
             await ctx.send(embed=self.embed)
             await ctx.send('GG!')
+
         # else prep for the next game veto
         else:
             # move to next game

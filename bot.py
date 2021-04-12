@@ -5,10 +5,11 @@ import discord.ext.commands.errors
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
 
-from smash.match import Match
+from smash.match import Match as SmashMatch
 from smash.player import Player
 from utils import embeds, player_utils
 from utils.message_generators import *
+from valorant.match import Match as ValMatch
 
 intents = discord.Intents.default()
 allowed_mentions = discord.AllowedMentions(everyone=False,
@@ -46,14 +47,16 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
                "{best-of (3 or 5)} @{opponent}` "
         await ctx.send(embed=await embeds.missing_param_error(text))
 
-    # smash best of 3 veto
+    # SMASH VETO
     elif game.lower() == 'smash' and \
             series_length == '3' or series_length == '5':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
 
         # initialize game
-        match = Match(Player(player1), Player(player2), int(series_length))
+        match = SmashMatch(Player(player1),
+                           Player(player2),
+                           int(series_length))
 
         # run veto with catch statement in case of time out
         try:
@@ -69,6 +72,17 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         except asyncio.TimeoutError:
             # get error embed and edit original message
             await ctx.send(embed=await embeds.timeout_error())
+
+    # VALORANT VETO
+    elif 'val' in game.lower():
+        # get players
+        player1, player2 = await player_utils.get_players(ctx)
+
+        # coinflip to determine seeding
+        player1, player2 = await player_utils.coinflip(ctx, player1, player2)
+        # initialize game
+        match = ValMatch(player1, player2, int(series_length))
+        await match.veto(ctx, bot)
 
 
 @bot.command()
