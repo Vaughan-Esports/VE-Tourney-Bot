@@ -250,11 +250,10 @@ class Match:
                     # skip to next step
                     continue
 
-                msg = await bot.wait_for('message',
-                                         check=mapCheck(ctx, self),
-                                         timeout=veto_timeout)
-
-                if x % 2 == 0:
+                if x % 2 == 0 and x != 8:
+                    msg = await bot.wait_for('message',
+                                             check=mapCheck(ctx, self),
+                                             timeout=veto_timeout)
                     # choose map for these games
                     self.games[self.current_game].choose(msg.content)
                     # loop through and veto from rest (chosen takes over veto)
@@ -272,11 +271,13 @@ class Match:
                     # side selection for last game
                     await ctx.send(
                         f"{self.captain1.mention} what is your "
-                        f"preferred starting side for game 3?")
+                        f"preferred starting side for game 5?")
                     await self.sideSelection(ctx, bot, 1)
 
                 # refresh embed
                 await ctx.send(embed=self.embed)
+
+        await ctx.send("GLHF! Don't forget to report your scores afterwards.")
 
     async def sideSelection(self, ctx, bot, chooser):
         # get side message

@@ -24,10 +24,10 @@ bot = discord.ext.commands.Bot(command_prefix=prefix,
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 
-@bot.command()
-async def veto(ctx, game=None, series_length=None, opponent=None):
+@bot.command(aliases=['ssbu'])
+async def smash(ctx, series_length=None, opponent=None):
     """
-    Starts a veto lobby with your opponent
+    Starts a Smash Ult. veto with your opponent
     """
 
     # guild and category objects
@@ -42,14 +42,13 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         await ctx.send(embed=await embeds.missing_permission_error(text))
 
     # let user know if they're missing a parameter
-    elif game is None or series_length is None or opponent is None:
+    elif series_length is None or opponent is None:
         text = "Initiate a veto with `ve!veto {game} " \
                "{best-of (3 or 5)} @{opponent}` "
         await ctx.send(embed=await embeds.missing_param_error(text))
 
     # SMASH VETO
-    elif game.lower() == 'smash' and \
-            series_length == '3' or series_length == '5':
+    elif series_length == '3' or series_length == '5':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
 
@@ -73,11 +72,30 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
             # get error embed and edit original message
             await ctx.send(embed=await embeds.timeout_error())
 
-    # VALORANT VETO
-    elif 'val' in game.lower() and \
-            series_length == '1' or \
-            series_length == '3' or \
-            series_length == '5':
+
+@bot.command(aliases=['valorant'])
+async def val(ctx, series_length=None, opponent=None):
+    """
+    Runs a VALORANT veto with your opponent
+    """
+    # guild and category objects
+    guild = bot.get_guild(guild_id)
+    active_category = guild.get_channel(active_channels_id)
+
+    # check if a valid place to start matches
+    if ctx.channel not in active_category.text_channels or \
+            ctx.channel.id == match_creation_channel_id:
+        text = "You can't do that here! Invoke a match chat first with " \
+               "`ve!match {@opponent}`"
+        await ctx.send(embed=await embeds.missing_permission_error(text))
+
+    # let user know if they're missing a parameter
+    elif series_length is None or opponent is None:
+        text = "Initiate a veto with `ve!veto {game} " \
+               "{best-of (3 or 5)} @{opponent}` "
+        await ctx.send(embed=await embeds.missing_param_error(text))
+
+    elif series_length == '1' or series_length == '3' or series_length == '5':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
 
@@ -85,7 +103,18 @@ async def veto(ctx, game=None, series_length=None, opponent=None):
         player1, player2 = await player_utils.coinflip(ctx, player1, player2)
         # initialize game
         match = ValMatch(player1, player2, int(series_length))
-        await match.veto(ctx, bot)
+        # run veto
+        try:
+            await match.veto(ctx, bot)
+
+        # if the veto times out
+        except asyncio.TimeoutError:
+            # get error embed and edit original message
+            await ctx.send(embed=await embeds.timeout_error())
+
+    else:
+        text = "Matches must either be a best of 1, 3, or 5."
+        await ctx.send(embed=await embeds.missing_param_error(text))
 
 
 @bot.command()
