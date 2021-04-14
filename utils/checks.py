@@ -45,7 +45,8 @@ def sideCheck(ctx):
     """
 
     def func(message):
-        return ('att' in message.content or 'def' in message.content) and \
+        return ('att' in message.content.lower()
+                or 'def' in message.content.lower()) and \
                message.channel == ctx.channel
 
     return func
