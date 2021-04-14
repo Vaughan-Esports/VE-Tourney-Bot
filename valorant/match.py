@@ -286,14 +286,14 @@ class Match:
                                  timeout=veto_timeout)
 
         # set proper captain pings
-        if 'att' in msg.content:
+        if 'att' in msg.content.lower():
             if chooser == 1:
                 self.games[self.current_game].att_start = self.captain1
                 self.games[self.current_game].def_start = self.captain2
             else:
                 self.games[self.current_game].att_start = self.captain2
                 self.games[self.current_game].def_start = self.captain1
-        elif 'def' in msg.content:
+        elif 'def' in msg.content.lower():
             if chooser == 2:
                 self.games[self.current_game].att_start = self.captain1
                 self.games[self.current_game].def_start = self.captain2
