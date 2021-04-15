@@ -143,7 +143,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [@brndnly](https://twitter.com/brndnly) - email@example.com
+Your Name - [@brndnly](https://twitter.com/brndnly) - brandon@brandonly.me
 
 Project
 Link: [https://github.com/Vaughan-Esports/VE-Tourney-Bot](https://github.com/Vaughan-Esports/VE-Tourney-Bot)
