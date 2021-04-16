@@ -7,6 +7,7 @@ from discord.ext import commands
 from discord.ext.commands import MissingPermissions
 from dotenv import load_dotenv
 
+from osu.game import Game
 from settings import active_channels_id, inactive_channels_id
 from settings import guild_id, TO_role_id, match_creation_channel_id
 from settings import prefix, description, tourney_name, init_match_message
@@ -28,8 +29,6 @@ bot = discord.ext.commands.Bot(command_prefix=prefix,
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
-
-BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 
 @bot.command(aliases=['ssbu'])
@@ -136,6 +135,12 @@ async def val(ctx, series_length=None, opponent=None):
         text = f"Matches must either be a best of 1, 3, or 5.\n\n" \
                f"Example: {valorant_example}"
         await ctx.send(embed=await embeds.invalid_param_error(text))
+
+
+@bot.command()
+async def osu(ctx):
+    match = Game(2)
+    await ctx.send(match.map_pool.noMod[2].command)
 
 
 @bot.command()
@@ -302,4 +307,4 @@ async def purge_error(ctx, error):
         await ctx.send(embed=await embeds.missing_permission_error(text))
 
 
-bot.run(BOT_TOKEN)
+bot.run(os.getenv('BOT_TOKEN'))

@@ -22,6 +22,19 @@ class Beatmap:
         self.veto = False
         self.chosen = False
 
+    @property
+    def command(self) -> str:
+        """
+        Bancho bot command to set the map
+        :return: string for user
+        """
+        message = f'`!mp map {self.map_id}`\n'
+        if self.category == 5 or self.category == 0:
+            return f'{message}`!mp mods NF`'
+        else:
+            # first two letters of alias is the mod name
+            return f'{message}`!mp mods NF {self.alias[:2]}`'
+
     def __str__(self) -> str:
         """
         String representation of a map
