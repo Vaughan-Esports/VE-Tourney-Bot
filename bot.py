@@ -1,5 +1,6 @@
 import asyncio
 import os
+import secrets
 from os.path import join, dirname
 
 import discord.ext.commands.errors
@@ -8,13 +9,14 @@ from discord.ext.commands import MissingPermissions
 from dotenv import load_dotenv
 
 from osu.match import Match as osuMatch
-from settings import active_channels_id, inactive_channels_id
+from settings import active_channels_id, inactive_channels_id, veto_timeout
 from settings import guild_id, TO_role_id, match_creation_channel_id
 from settings import prefix, description, tourney_name, init_match_message
 from settings import smash_example, valorant_example, osu_example
 from smash.match import Match as SmashMatch
 from smash.player import Player
 from utils import embeds, player_utils
+from utils.checks import doneCheck
 from valorant.match import Match as ValMatch
 
 intents = discord.Intents.default()
@@ -156,7 +158,7 @@ async def osu(ctx, series_length=None, opponent=None):
                "{best-of (3 or 5)} @{opponent}` "
         await ctx.send(embed=await embeds.missing_param_error(text))
 
-    # SMASH VETO
+    # OSU VETO
     elif series_length == '5' or series_length == '7':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
@@ -164,6 +166,26 @@ async def osu(ctx, series_length=None, opponent=None):
         # coinflip to determine seeding
         player1, player2 = await player_utils.coinflip(ctx, player1, player2)
 
+        # send creation info
+        msg = await ctx.send(f'{player1.mention}, setup a lobby with '
+                             f'the commands: \n\n'
+                             f'`!mp make VES: {player1.name} vs {player2.name}`'
+                             f'\n'
+                             f'`!mp password {secrets.randbits(16)}`'
+                             f'\n'
+                             f'`!mp size 3`'
+                             f'\n'
+                             f'`!mp set 2 3`'
+                             f'\n\n'
+                             f'Say `done` when finished and '
+                             f'{player2.mention} has joined the lobby.')
+
+        # pin the message
+        await msg.pin()
+
+        await bot.wait_for('message',
+                           check=doneCheck(ctx),
+                           timeout=veto_timeout)
 
         # initialize game
         match = osuMatch(player1,

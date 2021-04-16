@@ -153,6 +153,7 @@ class Match:
         await self.send_commands(ctx)
 
         # regenerate embed and send
+        await ctx.send(embed=self.embed)
 
         # get winner
         await ctx.send(f"{newline}GLHF! Once finished, "
@@ -173,7 +174,9 @@ class Match:
         if self.player1_wins >= (self.num_of_games // 2) + 1:
             self.winner = self.player1
             await ctx.send(embed=self.winner_embed)
-            await ctx.send('GG! Run `ve!close` to archive this channel.')
+            await ctx.send('GG! Run `ve!close` to archive this channel.'
+                           '\n\n'
+                           'Don\'t forget to run `!mp close` in your lobby')
 
         # else prep for the next game veto
         else:

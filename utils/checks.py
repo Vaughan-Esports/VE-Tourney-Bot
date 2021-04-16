@@ -1,3 +1,9 @@
+def doneCheck(ctx):
+    def func(message):
+        return message.content.lower == 'done' \
+               and message.channel == ctx.channel
+
+
 def playerCheck(ctx):
     def func(message):
         """Checks if a player said 'me' """
