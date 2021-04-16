@@ -198,7 +198,7 @@ async def match(ctx, opponent=None):
                                                           embed_links=True),
             guild.default_role: discord.PermissionOverwrite(
                 send_messages=False,
-                read_messages=True)
+                read_messages=False)
         }
 
         # create channel
@@ -240,9 +240,6 @@ async def close(ctx):
         await ctx.send(embed=await embeds.missing_permission_error(text))
 
     else:
-        # notifies users of archived channel
-        await ctx.send(embed=await embeds.match_archived())
-
         # guild and category objects
         guild = bot.get_guild(guild_id)
         inactive_category = guild.get_channel(inactive_channels_id)
@@ -253,7 +250,7 @@ async def close(ctx):
         overwrites = {
             guild.default_role: discord.PermissionOverwrite(
                 send_messages=False,
-                read_messages=True),
+                read_messages=False),
             game_coordinator: discord.PermissionOverwrite(add_reactions=True,
                                                           read_messages=True,
                                                           send_messages=True,
@@ -264,6 +261,9 @@ async def close(ctx):
 
         await ctx.channel.edit(category=inactive_category,
                                overwrites=overwrites)
+
+        # notifies users of archived channel
+        await ctx.send(embed=await embeds.match_archived())
 
 
 @bot.command(aliases=['flip'])
