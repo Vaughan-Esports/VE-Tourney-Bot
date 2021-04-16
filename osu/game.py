@@ -6,7 +6,7 @@ class Game:
     Represents an osu! game
     """
 
-    def __init__(self, game_num: int):
+    def __init__(self, game_num: int, tiebreaker=False):
         self.name = f"`                    " \
                     f"Game {game_num + 1}" \
                     f"                     `"
@@ -16,17 +16,9 @@ class Game:
 
         self.map_pool: MapPool = MapPool()
 
-    @property
-    def winner_embed(self) -> str:
-        """
-        Generate embed string for winner line
-        :return:
-        """
-        message = "**Winner:**"
-        if self.winner is None:
-            return f"{message} TBD"
-        else:
-            return f"{message} {self.winner.mention}"
+        if tiebreaker:
+            self.selected_map = self.map_pool.tieBreaker
+            self.map_pool.tieBreaker.chosen = True
 
     @property
     def no_mod_embed(self) -> str:

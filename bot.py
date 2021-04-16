@@ -159,7 +159,7 @@ async def osu(ctx, series_length=None, opponent=None):
         await ctx.send(embed=await embeds.missing_param_error(text))
 
     # OSU VETO
-    elif series_length == '5' or series_length == '7':
+    elif series_length == '3' or series_length == '5' or series_length == '7':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
 
@@ -209,7 +209,7 @@ async def osu(ctx, series_length=None, opponent=None):
             await ctx.send(embed=await embeds.timeout_error())
 
     else:
-        text = f"Matches must either be a best of 5 or 7.\n\n" \
+        text = f"Matches must either be a best of 3, 5, or 7.\n\n" \
                f"Example: {osu_example}"
         await ctx.send(embed=await embeds.invalid_param_error(text))
 

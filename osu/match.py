@@ -29,18 +29,28 @@ class Match:
         # match data
         self.games: List[Game] = []
         self.name: str = f"{tourney_name}: {player1.name} vs {player2.name}"
-        self.description: str = f"{self.player1.mention} vs " \
-                                f"{self.player2.mention} " \
-                                f"\nThe rulebook can be found " \
-                                f"[here]({rulebook_url})"
         self.veto_maps = []
 
         # match state
         self.num_of_games: int = num_of_games
         self.current_game: int = 0
 
+        # map pick
+        self.a_pick = self.player1.mention
+        self.b_pick = self.player2.mention
+
         for x in range(num_of_games):
-            self.games.append(Game(x))
+            if x == num_of_games - 1:
+                self.games.append(Game(x, True))
+            else:
+                self.games.append(Game(x))
+
+    @property
+    def description(self):
+        return f"{self.player1_wins} - {self.player1.mention} vs " \
+               f"{self.player2.mention} - {self.player2_wins} " \
+               f"\nThe rulebook can be found " \
+               f"[here]({rulebook_url})"
 
     @property
     def embed(self):
@@ -85,10 +95,18 @@ class Match:
                               color=discord.Colour.green())
         # loop through max games times and generate embed fields
         for game in self.games:
-            embed.add_field(name=game.name,
-                            value=f'**Map**: {game.selected_map} | '
-                                  f'{game.winner_embed}',
-                            inline=False)
+            if game.winner is not None:
+                embed.add_field(name=game.name,
+                                value='_ _',
+                                inline=False)
+                embed.add_field(name='__Winner__',
+                                value=game.winner.mention,
+                                inline=False)
+                embed.add_field(name='__Map__',
+                                value=f'{game.selected_map.alias} - '
+                                      f'{game.selected_map.name}',
+                                inline=False)
+
         # set footer
         embed.set_footer(icon_url=footer_icon,
                          text=f"{tourney_name} | {footer_note}")
@@ -106,7 +124,7 @@ class Match:
 
         # if tiebreaker
         if self.current_game == self.num_of_games - 1:
-            self.games[self.current_game].choose_map('tb1')
+            await ctx.send('TIE BREAKER TIME!')
             await self.send_commands(ctx)
 
         # initial veto
@@ -130,30 +148,30 @@ class Match:
                 # regenerate and send embed
                 await ctx.send(embed=self.embed)
 
-        # choose maps
-        if self.current_game % 2 == 0:
-            # when even its player 2 veto
-            await ctx.send(f'{self.player2.mention}, pick a map for game'
-                           f' {self.current_game + 1}')
-        else:
-            # when odd its player 1 veto
-            await ctx.send(f'{self.player1.mention}, pick a map for game'
-                           f' {self.current_game + 1}')
+        if not self.current_game == self.num_of_games - 1:
+            # choose maps
+            if self.current_game % 2 == 0:
+                # when even its player 2 veto
+                await ctx.send(f'{self.b_pick}, pick a map for game'
+                               f' {self.current_game + 1}')
+            else:
+                # when odd its player 1 veto
+                await ctx.send(f'{self.a_pick}, pick a map for game'
+                               f' {self.current_game + 1}')
 
-        # get map
-        msg = await bot.wait_for('message',
-                                 check=beatmapCheck(ctx, self),
-                                 timeout=veto_timeout)
+            # get map
+            msg = await bot.wait_for('message',
+                                     check=beatmapCheck(ctx, self),
+                                     timeout=veto_timeout)
 
-        # select map
-        self.games[self.current_game].choose_map(msg.content)
-        # veto map out of future games
-        self.veto_maps.append(msg.content)
-        # send commands for the map
-        await self.send_commands(ctx)
-
-        # regenerate embed and send
-        await ctx.send(embed=self.embed)
+            # select map
+            self.games[self.current_game].choose_map(msg.content)
+            # veto map out of future games
+            self.veto_maps.append(msg.content)
+            # regenerate embed and send
+            await ctx.send(embed=self.embed)
+            # send commands for the map
+            await self.send_commands(ctx)
 
         # get winner
         await ctx.send(f"{newline}GLHF! Once finished, "
