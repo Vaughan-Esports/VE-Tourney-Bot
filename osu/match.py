@@ -77,6 +77,23 @@ class Match:
 
         return embed
 
+    @property
+    def winner_embed(self):
+        title = f"osu! Best-of-{self.num_of_games} Veto"
+        embed = discord.Embed(title=title,
+                              description=self.description,
+                              color=discord.Colour.green())
+        # loop through max games times and generate embed fields
+        for game in self.games:
+            embed.add_field(name=game.name,
+                            value=f'**Map**: {game.selected_map} | '
+                                  f'{game.winner_embed}',
+                            inline=False)
+        # set footer
+        embed.set_footer(icon_url=footer_icon,
+                         text=f"{tourney_name} | {footer_note}")
+        return embed
+
     async def veto(self, ctx: discord.ext.commands.Context,
                    bot: discord.ext.commands.Bot):
 
@@ -155,6 +172,7 @@ class Match:
         # check if the match has a winner
         if self.player1_wins >= (self.num_of_games // 2) + 1:
             self.winner = self.player1
+            await ctx.send(embed=self.winner_embed)
             await ctx.send('GG! Run `ve!close` to archive this channel.')
 
         # else prep for the next game veto
