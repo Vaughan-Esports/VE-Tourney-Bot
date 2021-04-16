@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 from settings import active_channels_id, inactive_channels_id
 from settings import guild_id, TO_role_id, match_creation_channel_id
-from settings import prefix, description, tourney_name
+from settings import prefix, description, tourney_name, init_match_message
 from settings import smash_example, valorant_example
 from smash.match import Match as SmashMatch
 from smash.player import Player
@@ -216,10 +216,7 @@ async def match(ctx, opponent=None):
         await main_msg.edit(embed=await embeds.match_started(match_channel))
 
         # send instructions into the channel
-        await match_channel.send("Once both sides are ready, invoke the veto "
-                                 "process with `ve!veto {game}"
-                                 "{best-of (3 or 5)} {@opponent}`. "
-                                 "For example: `ve!veto smash 3 @Harry`")
+        await match_channel.send(init_match_message)
 
 
 @bot.command()
