@@ -7,11 +7,11 @@ from discord.ext import commands
 from discord.ext.commands import MissingPermissions
 from dotenv import load_dotenv
 
-from osu.game import Game
+from osu.match import Match as osuMatch
 from settings import active_channels_id, inactive_channels_id
 from settings import guild_id, TO_role_id, match_creation_channel_id
 from settings import prefix, description, tourney_name, init_match_message
-from settings import smash_example, valorant_example
+from settings import smash_example, valorant_example, osu_example
 from smash.match import Match as SmashMatch
 from smash.player import Player
 from utils import embeds, player_utils
@@ -138,9 +138,57 @@ async def val(ctx, series_length=None, opponent=None):
 
 
 @bot.command()
-async def osu(ctx):
-    match = Game(2)
-    await ctx.send(match.map_pool.noMod[2].command)
+async def osu(ctx, series_length=None, opponent=None):
+    # guild and category objects
+    guild = bot.get_guild(guild_id)
+    active_category = guild.get_channel(active_channels_id)
+
+    # check if a valid place to start matches
+    if ctx.channel not in active_category.text_channels or \
+            ctx.channel.id == match_creation_channel_id:
+        text = "You can't do that here! Invoke a match chat first with " \
+               "`ve!match {@opponent}`"
+        await ctx.send(embed=await embeds.missing_permission_error(text))
+
+    # let user know if they're missing a parameter
+    elif series_length is None or opponent is None:
+        text = "Initiate a veto with `ve!veto {game} " \
+               "{best-of (3 or 5)} @{opponent}` "
+        await ctx.send(embed=await embeds.missing_param_error(text))
+
+    # SMASH VETO
+    elif series_length == '5' or series_length == '7':
+        # get players
+        player1, player2 = await player_utils.get_players(ctx)
+
+        # coinflip to determine seeding
+        player1, player2 = await player_utils.coinflip(ctx, player1, player2)
+
+        # initialize game
+        match = osuMatch(player1,
+                         player2,
+                         int(series_length))
+
+        # start delay
+        await ctx.send(f"Starting veto with {player1.mention} as "
+                       f"**Captain 1** and {player2.mention} "
+                       f"as **Captain 2** in 5 seconds...")
+        await asyncio.sleep(5)
+
+        # run veto
+        try:
+            while match.winner is None:
+                await match.veto(ctx, bot)
+
+        # if the veto times out
+        except asyncio.TimeoutError:
+            # get error embed and edit original message
+            await ctx.send(embed=await embeds.timeout_error())
+
+    else:
+        text = f"Matches must either be a best of 5 or 7.\n\n" \
+               f"Example: {osu_example}"
+        await ctx.send(embed=await embeds.invalid_param_error(text))
 
 
 @bot.command()

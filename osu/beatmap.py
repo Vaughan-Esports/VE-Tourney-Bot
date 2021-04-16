@@ -41,7 +41,7 @@ class Beatmap:
         :return:
         """
         if self.veto:
-            name = self.name
+            name = f'{self.alias[2]}. {self.name}'
             # surround in cross out if crossing
             if cross_map_on_veto:
                 name = f'~~{name}~~'
@@ -51,9 +51,9 @@ class Beatmap:
             # return the name of the stage
             return name
         elif self.chosen:
-            return f'⮕**{self.name}**'
+            return f'⮕**{self.alias[2]}. {self.name}**'
         else:
-            return self.name
+            return f'{self.alias[2]}. {self.name}'
 
     def __eq__(self, other) -> bool:
         """

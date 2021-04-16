@@ -17,6 +17,18 @@ class Game:
         self.map_pool: MapPool = MapPool()
 
     @property
+    def winner_embed(self) -> str:
+        """
+        Generate embed string for winner line
+        :return:
+        """
+        message = "**Winner:**"
+        if self.winner is None:
+            return f"{message} TBD"
+        else:
+            return f"{message} {self.winner.mention}"
+
+    @property
     def no_mod_embed(self) -> str:
         message = ""
         # loop through no mods list
@@ -60,7 +72,7 @@ class Game:
     def free_mod_embed(self) -> str:
         message = ""
         # loop through no mods list
-        for beatmap in self.map_pool.noMod:
+        for beatmap in self.map_pool.freeMod:
             # append map name to a newline in the message
             message = f'{message}{beatmap}\n'
         # return message string
@@ -69,3 +81,17 @@ class Game:
     @property
     def tiebreaker_embed(self) -> str:
         return self.map_pool.tieBreaker
+
+    def veto_map(self, map: str):
+        """
+        Tries to veto a map
+        :param map: name/alias of map to veto
+        """
+        self.map_pool.veto(map)
+
+    def choose_map(self, map: str):
+        """
+        Chooses a map
+        :param map: name/alias of map to choose
+        """
+        self.selected_map = self.map_pool.choose(map)

@@ -1,5 +1,5 @@
 # embed settings
-tourney_name = "VE Anniversary Series: Spike Rush Event"
+tourney_name = "VE Anniversary Series"
 footer_note = "© Brandon Ly 2021"
 footer_icon = "https://vaughanesports.org/assets/Vaughan%20Esports%20Logo.png"
 rulebook_url = "https://vaughanesports.org/rules"  # url to rulebook
@@ -147,7 +147,7 @@ beatmaps = [
     {'name': 'Arrival of Tears',
      'map_id': 796828,
      'category': 5,
-     'alias': 'TB'},
+     'alias': 'TB1'},
 ]
 
 # tourney categories
@@ -168,3 +168,4 @@ veto_timeout = 1800
 # example commands (discord formatting)
 smash_example = '`ve!smash 3 @Brandon`'
 valorant_example = '`ve!val 1 @Brandon`'
+osu_example = '`ve!osu 5 @Brandon`'
