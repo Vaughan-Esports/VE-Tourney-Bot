@@ -125,7 +125,6 @@ set up commands for players (e.g `ve!match @player1 @player2`)
 
 ## Roadmap
 
-- osu! Veto
 - League of Legends ARAM Roll
 - Logging
 - MongoDB Support (V2)
