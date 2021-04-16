@@ -111,6 +111,8 @@ Its main commands are
     - Starts a smash veto with your opponent (Best of can be 3 or 5)
 - `ve!val {best-of} @opponent`
     - Starts a VALORANT veto with your opponent (Best of can be 1, 3, or 5)
+- `ve!osu {best-of} @opponent`
+    - Starts a osu! veto with your opponent (Best of can be 3, 5, or 7)
 - `ve!close`
     - Closes a private chat between you and your opponent
 - `ve!purge`
@@ -125,7 +127,6 @@ set up commands for players (e.g `ve!match @player1 @player2`)
 
 ## Roadmap
 
-- osu! Veto
 - League of Legends ARAM Roll
 - Logging
 - MongoDB Support (V2)
