@@ -157,7 +157,7 @@ guild_id = 688141732507942918
 TO_role_id = 813564799211274272
 
 # channel where matches can be started
-match_creation_channel_id = 822644221165043725
+match_creation_channel_id = 703347224985337897
 # message sent when match channel is created
 init_match_message = "Once both sides are ready, invoke the veto process. " \
                      "Instructions are over in <#828496712024064010>"
