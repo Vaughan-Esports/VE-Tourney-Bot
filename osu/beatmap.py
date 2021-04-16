@@ -23,7 +23,7 @@ class Beatmap:
         self.chosen = False
 
     @property
-    def command(self) -> str:
+    def commands(self) -> str:
         """
         Bancho bot command to set the map
         :return: string for user

@@ -165,7 +165,7 @@ class Match:
         if self.player1.wins >= (self.num_of_games // 2) + 1:
             self.winner = self.player1
             await ctx.send(embed=self.embed)
-            await ctx.send('GG!')
+            await ctx.send('GG! Run `ve!close` to archive this channel.')
 
         # else prep for the next game veto
         else:

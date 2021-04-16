@@ -17,18 +17,6 @@ class Game:
         self.map_pool: MapPool = MapPool()
 
     @property
-    def winner_embed(self) -> str:
-        """
-        Generate embed string for winner line
-        :return:
-        """
-        message = "**Winner:**"
-        if self.winner is None:
-            return f"{message} TBD"
-        else:
-            return f"{message} {self.winner.mention}"
-
-    @property
     def no_mod_embed(self) -> str:
         message = ""
         # loop through no mods list

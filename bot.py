@@ -164,6 +164,7 @@ async def osu(ctx, series_length=None, opponent=None):
         # coinflip to determine seeding
         player1, player2 = await player_utils.coinflip(ctx, player1, player2)
 
+
         # initialize game
         match = osuMatch(player1,
                          player2,
@@ -171,8 +172,8 @@ async def osu(ctx, series_length=None, opponent=None):
 
         # start delay
         await ctx.send(f"Starting veto with {player1.mention} as "
-                       f"**Captain 1** and {player2.mention} "
-                       f"as **Captain 2** in 5 seconds...")
+                       f"**Player 1** and {player2.mention} "
+                       f"as **Player 2** in 5 seconds...")
         await asyncio.sleep(5)
 
         # run veto
