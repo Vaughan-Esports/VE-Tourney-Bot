@@ -194,7 +194,7 @@ class Match:
             await ctx.send(embed=self.winner_embed)
             await ctx.send('GG! Run `ve!close` to archive this channel.'
                            '\n\n'
-                           'Don\'t forget to run `!mp close` in your lobby')
+                           'Don\'t forget to run `!mp close` in osu!')
 
         # else prep for the next game veto
         else:
@@ -206,7 +206,7 @@ class Match:
             await asyncio.sleep(3)
 
     async def send_commands(self, ctx: discord.ext.commands.Context):
-        await ctx.send(f'Commands to setup the game: \n'
+        await ctx.send(f'**BanchoBot** commands to setup the game: \n'
                        f'{self.games[self.current_game].selected_map.commands}')
 
     def swap_players(self):

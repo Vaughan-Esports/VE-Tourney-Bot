@@ -1,6 +1,6 @@
 def doneCheck(ctx):
     def func(message):
-        return message.content.lower == 'done' \
+        return message.content.lower() == 'done' \
                and message.channel == ctx.channel
     return func
 

@@ -168,7 +168,7 @@ async def osu(ctx, series_length=None, opponent=None):
 
         # send creation info
         msg = await ctx.send(f'{player1.mention}, setup a lobby with '
-                             f'the commands: \n\n'
+                             f'the commands in `osu!`: \n\n'
                              f'`!mp make VES: {player1.name} vs {player2.name}`'
                              f'\n'
                              f'`!mp password {secrets.randbits(16)}`'
@@ -176,9 +176,9 @@ async def osu(ctx, series_length=None, opponent=None):
                              f'`!mp size 3`'
                              f'\n'
                              f'`!mp set 2 3`'
-                             f'\n\n'
-                             f'Say `done` when finished and '
-                             f'{player2.mention} has joined the lobby.')
+                             f'\n\n')
+        await ctx.send(f'Say `done` when finished and '
+                       f'{player2.mention} has joined the lobby.')
 
         # pin the message
         await msg.pin()
@@ -186,6 +186,7 @@ async def osu(ctx, series_length=None, opponent=None):
         await bot.wait_for('message',
                            check=doneCheck(ctx),
                            timeout=veto_timeout)
+        print('xd')
 
         # initialize game
         match = osuMatch(player1,
