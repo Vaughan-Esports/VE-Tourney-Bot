@@ -13,6 +13,26 @@ hide_map_on_veto = True  # covers stage in spoiler tag when veto
 prefix = "ve!"
 description = "Tournament Bot for Vaughan Esports"
 
+# tourney categories
+active_channels_id = 777421991031734292
+inactive_channels_id = 777422048943013908
+guild_id = 762532363695292455
+TO_role_id = 775562929675829269
+
+# channel where matches can be started
+match_creation_channel_id = 828867315256000513
+# message sent when match channel is created
+init_match_message = "Once both sides are ready, invoke the veto process. " \
+                     "Instructions are over in <#828496712024064010>"
+
+# timeout settings (in seconds)
+veto_timeout = 1800
+
+# example commands (discord formatting)
+smash_example = '`ve!smash 3 @Brandon`'
+valorant_example = '`ve!val 1 @Brandon`'
+osu_example = '`ve!osu 5 @Brandon`'
+
 # smash stages
 # abbreviations: https://www.ssbwiki.com/List_of_abbreviations#Stages
 stages = [
@@ -150,22 +170,30 @@ beatmaps = [
      'alias': 'TB1'},
 ]
 
-# tourney categories
-active_channels_id = 777421991031734292
-inactive_channels_id = 777422048943013908
-guild_id = 762532363695292455
-TO_role_id = 775562929675829269
-
-# channel where matches can be started
-match_creation_channel_id = 828867315256000513
-# message sent when match channel is created
-init_match_message = "Once both sides are ready, invoke the veto process. " \
-                     "Instructions are over in <#828496712024064010>"
-
-# timeout settings (in seconds)
-veto_timeout = 1800
-
-# example commands (discord formatting)
-smash_example = '`ve!smash 3 @Brandon`'
-valorant_example = '`ve!val 1 @Brandon`'
-osu_example = '`ve!osu 5 @Brandon`'
+# league champs
+lol_champs = ["Aatrox", "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie",
+              "Aphelios", "Ashe", "Aurelion Sol", "Azir", "Bard", "Blitzcrank",
+              "Brand", "Braum", "Caitlyn", "Camille", "Cassiopeia", "Cho'gath",
+              "Corki", "Darius", "Diana", "Dr. Mundo", "Draven", "Ekko",
+              "Elise", "Evelynn", "Ezreal", "Fiddlesticks", "Fiora", "Fizz",
+              "Galio", "Gangplank", "Garen", "Gnar", "Gragas", "Graves",
+              "Gwen", "Hecarim", "Heimerdinger", "Illaoi", "Irelia", "Ivern",
+              "Janna", "Jarvan IV", "Jax", "Jayce", "Jhin", "Jinx", "Kai'sa",
+              "Kalista", "Karma", "Karthus", "Kassadin", "Katarina", "Kayle",
+              "Kayn", "Kennen", "Kha'zix", "Kindred", "Kled", "Kog'maw",
+              "Leblanc", "Lee sin", "Leona", "Lillia", "Lissandra", "Lucian",
+              "Lulu", "Lux", "Malphite", "Malzahar", "Maokai", "Master Yi",
+              "Miss Fortune", "Mordekaiser", "Morgana", "Nami", "Nasus",
+              "Nautilus", "Neeko", "Nidalee", "Nocturne", "Nunu & Willump",
+              "Olaf", "Orianna", "Ornn", "Pantheon", "Poppy", "Pyke", "Qiyana",
+              "Quinn", "Rakan", "Rammus", "Rek'sai", "Rell", "Renekton",
+              "Rengar", "Riven", "Rumble", "Ryze", "Samira", "Sejuani",
+              "Senna", "Seraphine", "Sett", "Shaco", "Shen", "Shyvana",
+              "Singed", "Sion", "Sivir", "Skarner", "Sona", "Soraka", "Swain",
+              "Sylas", "Syndra", "Tahm Kench", "Taliyah", "Talon", "Taric",
+              "Teemo", "Thresh", "Tristana", "Trundle", "Tryndamere",
+              "Twisted Fate", "Twitch", "Udyr", "Urgot", "Varus", "Vayne",
+              "Veigar", "Vel'koz", "Vi", "Viego", "Viktor", "Vladimir",
+              "Volibear", "Warwick", "Wukong", "Xayah", "Xerath", "Xin zhao",
+              "Yasuo", "Yone", "Yorick", "Yuumi", "Zac", "Zed", "Ziggs",
+              "Zilean", "Zoe", "Zyra"]
