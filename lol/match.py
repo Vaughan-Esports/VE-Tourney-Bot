@@ -116,7 +116,7 @@ class Match:
 
         # team 2 veto chance
         await ctx.send(f'{self.captain2.mention}, would you like to reroll? '
-                       f'(Y/N) | You have `{lol_champselect_timeout}s` '
+                       f'(Yes/No) | You have `{lol_champselect_timeout}s` '
                        f'to decide.')
 
         try:
