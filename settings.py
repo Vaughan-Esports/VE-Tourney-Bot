@@ -25,13 +25,19 @@ match_creation_channel_id = 828867315256000513
 init_match_message = "Once both sides are ready, invoke the veto process. " \
                      "Instructions are over in <#828496712024064010>"
 
+# league settings
+aram_champ_pool_size = 20
+
 # timeout settings (in seconds)
 veto_timeout = 1800
+lol_champselect_timeout = 60
+lol_game_timeout = 5400
 
 # example commands (discord formatting)
 smash_example = '`ve!smash 3 @Brandon`'
 valorant_example = '`ve!val 1 @Brandon`'
 osu_example = '`ve!osu 5 @Brandon`'
+aram_example = '`ve!aram 3 @Brandon`'
 
 # smash stages
 # abbreviations: https://www.ssbwiki.com/List_of_abbreviations#Stages

@@ -72,3 +72,18 @@ def beatmapCheck(ctx, match):
                and message.channel == ctx.channel
 
     return func
+
+
+def yesOrNoCheck(ctx):
+    """
+    Checks if a user said yes or no
+    :param ctx:
+    :return:
+    """
+
+    def func(message):
+        return 'y' in message.content.lower() or \
+               'n' in message.content.lower() and \
+               message.channel == ctx.channel
+
+    return func

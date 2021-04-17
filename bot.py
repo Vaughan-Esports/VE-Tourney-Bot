@@ -8,8 +8,10 @@ from discord.ext import commands
 from discord.ext.commands import MissingPermissions
 from dotenv import load_dotenv
 
+from lol.match import Match as LoLMatch
 from osu.match import Match as osuMatch
-from settings import active_channels_id, inactive_channels_id, veto_timeout
+from settings import active_channels_id, inactive_channels_id, veto_timeout, \
+    aram_example
 from settings import guild_id, TO_role_id, match_creation_channel_id
 from settings import prefix, description, tourney_name, init_match_message
 from settings import smash_example, valorant_example, osu_example
@@ -52,8 +54,8 @@ async def smash(ctx, series_length=None, opponent=None):
 
     # let user know if they're missing a parameter
     elif series_length is None or opponent is None:
-        text = "Initiate a veto with `ve!veto {game} " \
-               "{best-of (3 or 5)} @{opponent}` "
+        text = "Initiate a veto with `ve!smash " \
+               "{best-of} @opponent` "
         await ctx.send(embed=await embeds.missing_param_error(text))
 
     # SMASH VETO
@@ -141,6 +143,9 @@ async def val(ctx, series_length=None, opponent=None):
 
 @bot.command()
 async def osu(ctx, series_length=None, opponent=None):
+    """
+    Starts an osu! veto with your opponent
+    """
     # guild and category objects
     guild = bot.get_guild(guild_id)
     active_category = guild.get_channel(active_channels_id)
@@ -216,6 +221,51 @@ async def osu(ctx, series_length=None, opponent=None):
 
 
 @bot.command()
+async def aram(ctx, series_length=None, opponent=None):
+    # guild and category objects
+    guild = bot.get_guild(guild_id)
+    active_category = guild.get_channel(active_channels_id)
+
+    # check if a valid place to start matches
+    if ctx.channel not in active_category.text_channels or \
+            ctx.channel.id == match_creation_channel_id:
+        text = "You can't do that here! Invoke a match chat first with " \
+               "`ve!match {@opponent}`"
+        await ctx.send(embed=await embeds.missing_permission_error(text))
+
+    # let user know if they're missing a parameter
+    elif series_length is None or opponent is None:
+        text = "Initiate a veto with `ve!aram " \
+               "{best-of} @opponent` "
+        await ctx.send(embed=await embeds.missing_param_error(text))
+
+    # SMASH VETO
+    elif series_length == '3' or series_length == '5':
+        # get players
+        player1, player2 = await player_utils.get_players(ctx)
+
+        # initialize game
+        match = LoLMatch(player1, player2, int(series_length))
+
+        # run veto with catch statement in case of time out
+        try:
+
+            # run veto's
+            while match.winner is None:
+                await match.veto(ctx, bot)
+
+        # if the veto times out
+        except asyncio.TimeoutError:
+            # get error embed and edit original message
+            await ctx.send(embed=await embeds.timeout_error())
+
+    else:
+        text = f"Matches must either be a best of 3 or 5.\n\n" \
+               f"Example: {aram_example}"
+        await ctx.send(embed=await embeds.invalid_param_error(text))
+
+
+@bot.command()
 async def match(ctx, opponent=None):
     """
     Creates a private text channel between you and your opponent(s)
@@ -275,7 +325,7 @@ async def match(ctx, opponent=None):
                                                           embed_links=True),
             guild.default_role: discord.PermissionOverwrite(
                 send_messages=False,
-                read_messages=False)
+                read_messages=True)
         }
 
         # create channel
@@ -327,7 +377,7 @@ async def close(ctx):
         overwrites = {
             guild.default_role: discord.PermissionOverwrite(
                 send_messages=False,
-                read_messages=False),
+                read_messages=True),
             game_coordinator: discord.PermissionOverwrite(add_reactions=True,
                                                           read_messages=True,
                                                           send_messages=True,

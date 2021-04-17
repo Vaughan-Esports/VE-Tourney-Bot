@@ -13,11 +13,11 @@ async def starting():
     return embed
 
 
-async def timeout_error():
+async def timeout_error(text="The match timer has expired."):
     # generate embed with red colour
     embed = discord.Embed(colour=discord.Colour.red())
     # set timeout field
-    embed.add_field(name="Timeout Error", value="The match timer has expired.",
+    embed.add_field(name="Timeout Error", value=text,
                     inline=False)
     # set footer
     embed.set_footer(icon_url=footer_icon,

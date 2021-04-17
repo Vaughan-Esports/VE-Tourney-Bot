@@ -58,7 +58,7 @@ class Match:
         embed = discord.Embed(title=title,
                               description=self.description,
                               color=discord.Colour.gold())
-        # loop through max games times and generate embed fields
+        # add current game fields
         embed.add_field(name=self.games[self.current_game].name,
                         value='_ _',
                         inline=False)
