@@ -18,7 +18,7 @@ from settings import smash_example, valorant_example, osu_example
 from smash.match import Match as SmashMatch
 from smash.player import Player
 from utils import embeds, player_utils
-from utils.checks import doneCheck
+from utils.checks import doneCheck, URLCheck
 from valorant.match import Match as ValMatch
 
 intents = discord.Intents.default()
@@ -191,12 +191,20 @@ async def osu(ctx, series_length=None, opponent=None):
         await bot.wait_for('message',
                            check=doneCheck(ctx),
                            timeout=veto_timeout)
-        print('xd')
+
+        # get match history link
+        await ctx.send(f'Paste the match history link into chat.'
+                       f'\nFound here: https://media.discordapp.net/attachments/832801322771808317/842564411817197598/unknown.png?width=457&height=225')
+
+        msg = await bot.wait_for('message',
+                                 check=URLCheck(ctx),
+                                 timeout=veto_timeout)
 
         # initialize game
         match = osuMatch(player1,
                          player2,
-                         int(series_length))
+                         int(series_length),
+                         msg.content)
 
         # start delay
         await ctx.send(f"Starting veto with {player1.mention} as "

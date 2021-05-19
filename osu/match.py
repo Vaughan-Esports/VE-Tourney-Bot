@@ -18,7 +18,8 @@ class Match:
     def __init__(self,
                  player1: discord.User,
                  player2: discord.User,
-                 num_of_games: int):
+                 num_of_games: int,
+                 match_history: str):
         # players
         self.player1 = player1
         self.player1_wins: int = 0
@@ -30,6 +31,7 @@ class Match:
         self.games: List[Game] = []
         self.name: str = f"{tourney_name}: {player1.name} vs {player2.name}"
         self.veto_maps = []
+        self.match_history_url: str = match_history
 
         # match state
         self.num_of_games: int = num_of_games
@@ -50,7 +52,9 @@ class Match:
         return f"{self.player1_wins} - {self.player1.mention} vs " \
                f"{self.player2.mention} - {self.player2_wins} " \
                f"\nThe rulebook can be found " \
-               f"[here]({rulebook_url})"
+               f"[here]({rulebook_url})" \
+               f"\n\n" \
+               f"[Match History]({self.match_history_url})"
 
     @property
     def embed(self):

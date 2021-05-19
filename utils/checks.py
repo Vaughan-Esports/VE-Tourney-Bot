@@ -87,3 +87,17 @@ def yesOrNoCheck(ctx):
                message.channel == ctx.channel
 
     return func
+
+
+def URLCheck(ctx):
+    """
+    Checks if a user said a valid URL
+    :param ctx:
+    :return:
+    """
+
+    def func(message):
+        return 'https://' in message.content.lower() and \
+               message.channel == ctx.channel
+
+    return func
