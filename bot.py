@@ -178,7 +178,7 @@ async def osu(ctx, series_length=None, opponent=None):
                              f'\n'
                              f'`!mp password {secrets.randbits(16)}`'
                              f'\n'
-                             f'`!mp size 3`'
+                             f'`!mp size 5`'
                              f'\n'
                              f'`!mp set 2 3`'
                              f'\n\n')
