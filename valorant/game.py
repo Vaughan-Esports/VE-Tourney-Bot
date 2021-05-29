@@ -74,3 +74,11 @@ class Game:
         for val_map in self.map_pool.maps:
             if not val_map.veto:
                 val_map.chosen = True
+
+    def veto_last(self):
+        """
+        Vetoes the last map that isn't chosen
+        """
+        for val_map in self.map_pool.maps:
+            if not val_map.chosen:
+                val_map.veto = True

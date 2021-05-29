@@ -105,7 +105,7 @@ stages = [
 ]
 
 # valorant maps
-val_maps = ["Bind", "Split", "Haven", "Ascent", "Icebox"]
+val_maps = ["Bind", "Split", "Haven", "Ascent", "Icebox", "Breeze"]
 
 # osu maps
 # can be found at https://link.vaughanesports.org/osumappool

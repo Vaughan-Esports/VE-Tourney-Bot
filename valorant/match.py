@@ -83,14 +83,23 @@ class Match:
                     await ctx.send(
                         f"{self.captain2.mention} veto another map.")
                 elif x == 4:
-                    # select last map
-                    self.games[self.current_game].choose_last()
+                    # get chosen map
+                    await ctx.send(
+                        f"{self.captain1.mention} choose the map.")
+
+                    msg = await bot.wait_for('message',
+                                             check=mapCheck(ctx, self),
+                                             timeout=veto_timeout)
+                    # choose map
+                    self.games[self.current_game].choose(msg.content)
+                    # cross out remaining
+                    self.games[self.current_game].veto_last()
 
                     # resend embed
                     await ctx.send(embed=self.embed)
 
                     await ctx.send(
-                        f"{self.captain1.mention} what is your "
+                        f"{self.captain2.mention} what is your "
                         f"preferred starting side?")
 
                 # if veto'ing
@@ -104,18 +113,24 @@ class Match:
                 # otherwise select side
                 else:
                     # run side selection
-                    await self.sideSelection(ctx, bot, 1)
+                    await self.sideSelection(ctx, bot, 2)
 
                 # resend embed
                 await ctx.send(embed=self.embed)
 
         # Bo3 VETO
         elif self.num_of_games == 3:
-            for x in range(6):
+            for x in range(7):
                 if x == 0:
                     await ctx.send(
-                        f"{self.captain1.mention} select a map for game 1.")
+                        f"{self.captain1.mention} veto a map.")
                 elif x == 1:
+                    await ctx.send(
+                        f"{self.captain2.mention} please veto a map.")
+                elif x == 2:
+                    await ctx.send(
+                        f"{self.captain1.mention} select a map for game 1.")
+                elif x == 3:
                     await ctx.send(
                         f"{self.captain2.mention} what is your "
                         f"preferred starting side for game 1?")
@@ -126,11 +141,10 @@ class Match:
                     await ctx.send(embed=self.embed)
                     # skip to next step
                     continue
-
-                elif x == 2:
+                elif x == 4:
                     await ctx.send(
                         f"{self.captain2.mention} select a map for game 2.")
-                elif x == 3:
+                elif x == 5:
                     await ctx.send(
                         f"{self.captain1.mention} what is your "
                         f"preferred starting side for game 2?")
@@ -141,19 +155,15 @@ class Match:
                     await ctx.send(embed=self.embed)
                     # skip to next step
                     continue
-
-                elif x == 4:
+                elif x == 6:
                     await ctx.send(
-                        f"{self.captain1.mention} please veto a map.")
-                elif x == 5:
-                    await ctx.send(
-                        f"{self.captain2.mention} please veto a map.")
+                        f"{self.captain1.mention} select a map for game 3.")
 
                 msg = await bot.wait_for('message',
                                          check=mapCheck(ctx, self),
                                          timeout=veto_timeout)
 
-                if x == 0 or x == 2:
+                if x == 2 or x == 4:
                     # choose map for these games
                     self.games[self.current_game].choose(msg.content)
                     # loop through and veto from rest (chosen takes over veto)
@@ -161,123 +171,31 @@ class Match:
                         game.veto_map(msg.content)
 
                 # FIXME: idk some way to do this better but it s 4am now xd
-                elif x == 4 or x == 5:
+                elif x == 0 or x == 1:
                     # veto the map from all games
                     for game in self.games:
                         game.veto_map(msg.content)
 
-                    if x == 5:
-                        # choose last map
-                        self.games[self.current_game].choose_last()
-
-                        # refresh embed
-                        await ctx.send(embed=self.embed)
-
-                        # side selection for last game
-                        await ctx.send(
-                            f"{self.captain1.mention} what is your "
-                            f"preferred starting side for game 3?")
-                        await self.sideSelection(ctx, bot, 1)
-
-                # refresh embed
-                await ctx.send(embed=self.embed)
-
-        # BO5 VETO
-        # FIXME: most definitely can be better, but its 4am xd
-        elif self.num_of_games == 5:
-            for x in range(9):
-                # GAME 1
-                if x == 0:
-                    await ctx.send(
-                        f"{self.captain1.mention} select a map for game 1.")
-                elif x == 1:
-                    await ctx.send(
-                        f"{self.captain2.mention} what is your "
-                        f"preferred starting side for game 1?")
-                    await self.sideSelection(ctx, bot, 2)
-                    # update current game
-                    self.current_game += 1
-                    # refresh embed
-                    await ctx.send(embed=self.embed)
-                    # skip to next step
-                    continue
-
-                # GAME 2
-                elif x == 2:
-                    await ctx.send(
-                        f"{self.captain2.mention} select a map for game 2.")
-                elif x == 3:
-                    await ctx.send(
-                        f"{self.captain1.mention} what is your "
-                        f"preferred starting side for game 2?")
-                    await self.sideSelection(ctx, bot, 1)
-                    # update current game
-                    self.current_game += 1
-                    # refresh embed
-                    await ctx.send(embed=self.embed)
-                    # skip to next step
-                    continue
-
-                # GAME 3
-                elif x == 4:
-                    await ctx.send(
-                        f"{self.captain1.mention} select a map for game 3.")
-                elif x == 5:
-                    await ctx.send(
-                        f"{self.captain2.mention} what is your "
-                        f"preferred starting side for game 3?")
-                    await self.sideSelection(ctx, bot, 2)
-                    # update current game
-                    self.current_game += 1
-                    # refresh embed
-                    await ctx.send(embed=self.embed)
-                    # skip to next step
-                    continue
-
-                # GAME 4
                 elif x == 6:
-                    await ctx.send(
-                        f"{self.captain2.mention} select a map for game 4.")
-                elif x == 7:
-                    await ctx.send(
-                        f"{self.captain1.mention} what is your "
-                        f"preferred starting side for game 4?")
-                    await self.sideSelection(ctx, bot, 1)
-                    # update current game
-                    self.current_game += 1
-                    # refresh embed
-                    await ctx.send(embed=self.embed)
-                    # skip to next step
-                    continue
-
-                if x % 2 == 0 and x != 8:
-                    msg = await bot.wait_for('message',
-                                             check=mapCheck(ctx, self),
-                                             timeout=veto_timeout)
-                    # choose map for these games
-                    self.games[self.current_game].choose(msg.content)
-                    # loop through and veto from rest (chosen takes over veto)
-                    for game in self.games:
-                        game.veto_map(msg.content)
-
-                # FIXME: idk some way to do this better but it s 4am now xd
-                elif x == 8:
                     # choose last map
-                    self.games[self.current_game].choose_last()
+                    self.games[self.current_game].choose(msg.content)
+                    # strike out remaining
+                    self.games[self.current_game].veto_last()
 
                     # refresh embed
                     await ctx.send(embed=self.embed)
 
                     # side selection for last game
                     await ctx.send(
-                        f"{self.captain1.mention} what is your "
-                        f"preferred starting side for game 5?")
-                    await self.sideSelection(ctx, bot, 1)
+                        f"{self.captain2.mention} what is your "
+                        f"preferred starting side for game 3?")
+                    await self.sideSelection(ctx, bot, 2)
 
                 # refresh embed
                 await ctx.send(embed=self.embed)
 
-        await ctx.send("GLHF! Don't forget to report your scores afterwards.")
+        await ctx.send("GLHF! Don't forget to report your scores afterwards."
+                       "\n\n Run `ve!close` when finished.")
 
     async def sideSelection(self, ctx, bot, chooser):
         # get side message

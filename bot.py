@@ -108,10 +108,10 @@ async def val(ctx, series_length=None, opponent=None):
     # let user know if they're missing a parameter
     elif series_length is None or opponent is None:
         text = "Initiate a veto with `ve!veto {game} " \
-               "{best-of (3 or 5)} @{opponent}` "
+               "{best-of (1 or 3)} @{opponent}` "
         await ctx.send(embed=await embeds.missing_param_error(text))
 
-    elif series_length == '1' or series_length == '3' or series_length == '5':
+    elif series_length == '1' or series_length == '3':
         # get players
         player1, player2 = await player_utils.get_players(ctx)
 
@@ -136,7 +136,7 @@ async def val(ctx, series_length=None, opponent=None):
             await ctx.send(embed=await embeds.timeout_error())
 
     else:
-        text = f"Matches must either be a best of 1, 3, or 5.\n\n" \
+        text = f"Matches must either be a best of 1 or 3.\n\n" \
                f"Example: {valorant_example}"
         await ctx.send(embed=await embeds.invalid_param_error(text))
 
@@ -333,7 +333,7 @@ async def match(ctx, opponent=None):
                                                           embed_links=True),
             guild.default_role: discord.PermissionOverwrite(
                 send_messages=False,
-                read_messages=True)
+                read_messages=False)
         }
 
         # create channel
